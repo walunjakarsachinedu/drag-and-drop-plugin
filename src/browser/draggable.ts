@@ -1,5 +1,4 @@
-import { EventEmitter, EventHandler } from "./util/event-emitter";
-import { clearTextSelection } from "./util/utils";
+import { EventEmitter, EventHandler } from "../util/event-emitter";
 
 var isDragging = false;
 

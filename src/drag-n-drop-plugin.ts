@@ -1,19 +1,23 @@
-import Draggable from './draggable';
+import Draggable from './browser/draggable';
+import MakeCopyFollowMouse from './browser/make-copy-follow-mouse';
 import './index.css';
-import { clearTextSelection } from './util/utils';
-
+import { resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
 
 
 const draggable = new Draggable();
+const followMouse = new MakeCopyFollowMouse();
 
-draggable.onDragStart(() => {
-  console.log("event: dragging is started");
-})
-draggable.onDragMove(() => {
-  clearTextSelection();
-  console.log("event: moving draggable element");
-})
+draggable.onDragStart((event) => {
+  setGlobalCursorStyleToMove();
+  followMouse.addElemCopyToDom(event);
+});
+
+draggable.onDragMove((event) => {
+  followMouse.makeElmFollowMouse(event);
+});
+
 draggable.onDragEnd(() => {
-  console.log("event: dragging is ended");
-})
+  resetGlobalCursorStyle();
+  followMouse.removeCopyFromDom();
+});
 
