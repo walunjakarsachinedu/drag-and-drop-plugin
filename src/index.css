@@ -19,7 +19,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100px;
-  aspect-ratio: 1;
+  width: 100px;
   background-color: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 10px;
@@ -27,11 +27,21 @@ body {
 } 
 
 .draggable-element {
-  position: fixed;
   margin: 0px;
   margin-top: 20px;
-  left: 0;
-  right: 0;
+  position: fixed;
+    left: 0;
+    right: 0;
+}
+
+.drop-indicator {
+  background-color: rgba(26, 144, 255, 0.08);
+  border: 1.5px solid rgb(26, 144, 255);
+  border-radius: 10px;
+  position: fixed;
+    left: 0;
+    right: 0;
+  transition: top 0.3s, left 0.3s, width 0.3s, height 0.3s;
 }
 
 [data-drop-target] {

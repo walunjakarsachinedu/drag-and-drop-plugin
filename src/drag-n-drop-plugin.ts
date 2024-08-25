@@ -1,23 +1,37 @@
-import Draggable from './browser/draggable';
-import MakeCopyFollowMouse from './browser/make-copy-follow-mouse';
+import DraggableZone from './browser/draggable-zone';
+import { DroppableIndicator } from './browser/droppable';
+import DroppableZone from './browser/droppable-zone';
+import DraggableFollowMouse from './browser/make-copy-follow-mouse';
 import './index.css';
-import { resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
+import { extractDropZone, extractTargetElement, resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
 
 
-const draggable = new Draggable();
-const followMouse = new MakeCopyFollowMouse();
+const draggableZone = new DraggableZone();
+const droppableZone = new DroppableZone();
 
-draggable.onDragStart((event) => {
-  setGlobalCursorStyleToMove();
-  followMouse.addElemCopyToDom(event);
+const followMouse = new DraggableFollowMouse();
+const droppable = new DroppableIndicator();
+
+
+droppableZone.onHovering((event) => {
+  droppable.showDropIndicator(event);
 });
 
-draggable.onDragMove((event) => {
+
+draggableZone.onDragStart((event) => {
+  setGlobalCursorStyleToMove();
+  followMouse.addElemCopyToDom(extractTargetElement(event));
+  droppableZone.listenToDroppableZone(extractDropZone(event));
+});
+
+draggableZone.onDragMove((event) => {
   followMouse.makeElmFollowMouse(event);
 });
 
-draggable.onDragEnd(() => {
+draggableZone.onDragEnd(() => {
   resetGlobalCursorStyle();
   followMouse.removeCopyFromDom();
+  droppable.hideDropIndicator();
+  droppableZone.cleanListener();
 });
 

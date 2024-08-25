@@ -5,7 +5,7 @@ var isDragging = false;
 /**  
  * Emit event for element with `data-drop-target` attribute.
 */
-class Draggable {
+class DraggableZone {
   private e_dragStart: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
   private e_dragMove: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
   private e_dragEnd: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
@@ -45,4 +45,4 @@ class Draggable {
   }
 }
 
-export default Draggable;
+export default DraggableZone;

@@ -19,4 +19,21 @@ function resetGlobalCursorStyle() {
   if (style) style.remove();
 }
 
-export {clearTextSelection, setGlobalCursorStyleToMove, resetGlobalCursorStyle};
+
+function extractTargetElement(event: MouseEvent) : HTMLElement|null|undefined {
+  return event.target as HTMLElement|null|undefined;
+}
+
+function extractDropZone(event: MouseEvent): string|undefined {
+  return extractTargetElement(event)?.dataset.dropTarget;
+}
+
+
+
+export {
+  clearTextSelection, 
+  setGlobalCursorStyleToMove, 
+  resetGlobalCursorStyle,
+  extractTargetElement,
+  extractDropZone
+};

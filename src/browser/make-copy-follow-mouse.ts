@@ -1,15 +1,14 @@
 import { clearTextSelection } from "../util/utils";
 
-class MakeCopyFollowMouse {
+class DraggableFollowMouse {
   draggableCopy: HTMLElement|null|undefined;
 
   /**
    * Creates a copy of the target element and adds it to the DOM.
    * @param event - The mouse event.
    */
-  addElemCopyToDom(event: MouseEvent) {
-    (event.target as HTMLElement|null|undefined)?.cloneNode(true);
-    this.draggableCopy = (event.target as HTMLElement|null|undefined)?.cloneNode(true) as HTMLElement|null|undefined;
+  addElemCopyToDom(element: HTMLElement|null|undefined) {
+    this.draggableCopy = element?.cloneNode(true) as HTMLElement|null|undefined;
     if(!this.draggableCopy) return;
     this.draggableCopy.classList.add("draggable-element");
     document.body.appendChild(this.draggableCopy);
@@ -41,4 +40,4 @@ class MakeCopyFollowMouse {
   }
 }
 
-export default MakeCopyFollowMouse;
+export default DraggableFollowMouse;
