@@ -1,7 +1,7 @@
 import DraggableZone from './browser/draggable-zone';
 import { DroppableIndicator } from './browser/droppable';
 import DroppableZone from './browser/droppable-zone';
-import DraggableFollowMouse from './browser/make-copy-follow-mouse';
+import DraggableFollowMouse from './browser/draggable-follow-mouse';
 import './index.css';
 import { extractDropZone, extractTargetElement, resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
 

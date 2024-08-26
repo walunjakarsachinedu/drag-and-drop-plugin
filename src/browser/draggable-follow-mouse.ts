@@ -10,6 +10,7 @@ class DraggableFollowMouse {
   addElemCopyToDom(element: HTMLElement|null|undefined) {
     this.draggableCopy = element?.cloneNode(true) as HTMLElement|null|undefined;
     if(!this.draggableCopy) return;
+    delete this.draggableCopy.dataset.dropTarget;
     this.draggableCopy.classList.add("draggable-element");
     document.body.appendChild(this.draggableCopy);
   }
