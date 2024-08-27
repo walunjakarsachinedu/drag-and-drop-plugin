@@ -1,4 +1,5 @@
 import { EventEmitter, EventHandler } from "../util/event-emitter";
+import { extractTargetElement } from "../util/utils";
 
 /**  
  * Emit event for element with `data-drop-target` attribute.
@@ -24,8 +25,9 @@ class DroppableZone {
    * emits event when hovering droppable zone.
   */
   private _hoveringEventEmitter(event: MouseEvent) {
-    const target = event.target as HTMLElement|null|undefined;
-    if(!target || target.dataset.dropTarget != this.droppableZone) return;
+    const target = extractTargetElement(event);
+    const isZoneDroppable = target && this.droppableZone && target.matches(this.droppableZone);
+    if(!isZoneDroppable) return;
 
     this.e_hovering.emit(event);
   }
