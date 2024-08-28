@@ -25,7 +25,11 @@ function extractTargetElement(event: MouseEvent) : HTMLElement|null|undefined {
 }
 
 function extractDropZone(event: MouseEvent): string|undefined {
-  return extractTargetElement(event)?.dataset.dropTarget;
+  return extractTargetElement(event)?.dataset.swdTargets;
+}
+
+function hasCommonElement(arr1: String[], arr2: String[]) :boolean {
+  return arr1.some((element) => arr2.includes(element));
 }
 
 
@@ -35,5 +39,6 @@ export {
   setGlobalCursorStyleToMove, 
   resetGlobalCursorStyle,
   extractTargetElement,
-  extractDropZone
+  extractDropZone,
+  hasCommonElement,
 };

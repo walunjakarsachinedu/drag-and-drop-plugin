@@ -3,7 +3,7 @@ import { EventEmitter, EventHandler } from "../util/event-emitter";
 var isDragging = false;
 
 /**  
- * Emit event for element with `data-drop-target` attribute.
+ * Emit event for element with `data-swd-targets` attribute.
 */
 class DraggableZone {
   private e_dragStart: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
@@ -12,7 +12,7 @@ class DraggableZone {
   constructor() {
     document.addEventListener('mousedown', (event: MouseEvent) => {
       const target = event.target as HTMLElement|null|undefined;
-      if (!target?.hasAttribute('data-drop-target')) return;
+      if (!target?.dataset.swdTargets) return;
 
       this.e_dragStart.emit(event);
       isDragging = true;

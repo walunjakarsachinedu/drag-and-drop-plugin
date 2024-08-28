@@ -44,6 +44,6 @@ body {
   transition: top 0.3s, left 0.3s, width 0.3s, height 0.3s;
 }
 
-[data-drop-target] {
+[data-swd-targets] {
   cursor: grab;
 }
