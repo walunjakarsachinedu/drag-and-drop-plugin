@@ -1,20 +1,20 @@
 import DraggableZone from './browser/draggable-zone';
-import { DroppableIndicator } from './browser/droppable';
 import DroppableZone from './browser/droppable-zone';
 import DraggableFollowMouse from './browser/draggable-follow-mouse';
 import './index.css';
 import { extractDropZone, extractTargetElement, resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
+import { DropIndicator } from './browser/droppable-indicator';
 
 
 const draggableZone = new DraggableZone();
 const droppableZone = new DroppableZone();
 
 const followMouse = new DraggableFollowMouse();
-const droppable = new DroppableIndicator();
+const dropIndicator = new DropIndicator();
 
 
 droppableZone.onHovering((event) => {
-  droppable.showDropIndicator(event);
+  dropIndicator.showDropIndicator(event);
 });
 
 
@@ -31,7 +31,7 @@ draggableZone.onDragMove((event) => {
 draggableZone.onDragEnd(() => {
   resetGlobalCursorStyle();
   followMouse.removeCopyFromDom();
-  droppable.hideDropIndicator();
+  dropIndicator.hideDropIndicator();
   droppableZone.cleanListener();
 });
 

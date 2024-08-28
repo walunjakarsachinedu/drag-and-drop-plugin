@@ -1,4 +1,4 @@
-class DroppableIndicator {
+class DropIndicator {
   dropIndicator: HTMLElement = document.createElement("div");
 
   constructor() {
@@ -40,5 +40,5 @@ class DroppableIndicator {
 }
 
 
-export {DroppableIndicator};
+export {DropIndicator};
 
