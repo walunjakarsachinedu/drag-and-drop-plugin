@@ -1,6 +1,6 @@
 import { clearTextSelection } from "../util/utils";
 
-class DraggableFollowMouse {
+class DraggableCopy {
   draggableCopy: HTMLElement|null|undefined;
 
   /**
@@ -41,4 +41,4 @@ class DraggableFollowMouse {
   }
 }
 
-export default DraggableFollowMouse;
+export { DraggableCopy };

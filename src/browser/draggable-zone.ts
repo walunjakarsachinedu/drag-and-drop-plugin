@@ -45,4 +45,4 @@ class DraggableZone {
   }
 }
 
-export default DraggableZone;
+export { DraggableZone };

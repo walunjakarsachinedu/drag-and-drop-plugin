@@ -44,4 +44,4 @@ class DroppableZone {
   }
 }
 
-export default DroppableZone;
+export {DroppableZone};

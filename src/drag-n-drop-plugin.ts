@@ -1,15 +1,15 @@
-import DraggableZone from './browser/draggable-zone';
-import DroppableZone from './browser/droppable-zone';
-import DraggableFollowMouse from './browser/draggable-follow-mouse';
 import './index.css';
 import { extractDropZone, extractTargetElement, resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
 import { DropIndicator } from './browser/droppable-indicator';
+import { DraggableCopy } from './browser/draggable-copy';
+import { DraggableZone } from './browser/draggable-zone';
+import { DroppableZone } from './browser/droppable-zone';
 
 
 const draggableZone = new DraggableZone();
 const droppableZone = new DroppableZone();
 
-const followMouse = new DraggableFollowMouse();
+const draggableCopy = new DraggableCopy();
 const dropIndicator = new DropIndicator();
 
 
@@ -20,17 +20,17 @@ droppableZone.onHovering((event) => {
 
 draggableZone.onDragStart((event) => {
   setGlobalCursorStyleToMove();
-  followMouse.addElemCopyToDom(extractTargetElement(event));
+  draggableCopy.addElemCopyToDom(extractTargetElement(event));
   droppableZone.listenToDroppableZone(extractDropZone(event));
 });
 
 draggableZone.onDragMove((event) => {
-  followMouse.makeElmFollowMouse(event);
+  draggableCopy.makeElmFollowMouse(event);
 });
 
 draggableZone.onDragEnd(() => {
   resetGlobalCursorStyle();
-  followMouse.removeCopyFromDom();
+  draggableCopy.removeCopyFromDom();
   dropIndicator.hideDropIndicator();
   droppableZone.cleanListener();
 });
