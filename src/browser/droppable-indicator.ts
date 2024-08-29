@@ -1,3 +1,5 @@
+import { MouseData, Offset, SwdZoneElmentData } from "../types/types";
+
 class DropIndicator {
   dropIndicator: HTMLElement = document.createElement("div");
 
@@ -22,18 +24,38 @@ class DropIndicator {
     const mouseX = event.pageX, mouseY = event.pageY;
     const dx = mouseX-x, dy = mouseY-y;
     const xOffset = 10, yOffset = 20;
-    
-    this.dropIndicator.style.height = `${height-yOffset}px`;
+
+    const swdZoneElement: SwdZoneElmentData = { x, y, width, height};
+    const mouseData: MouseData = { x: mouseX, y: mouseY, dx, dy, dataset: target.dataset};
+    const offset: Offset = {x: xOffset, y: yOffset};
+
+    // Todo: add logic to show indicator different mode 
+    //       specifically call different show indicator function
+    this.showHorizIndicator({element: swdZoneElement, mouseData: mouseData, offset: offset});
+  }
+
+
+  showHorizIndicator({element, mouseData, offset}: {element: SwdZoneElmentData, mouseData: MouseData, offset: Offset}) {
+    this.dropIndicator.style.height = `${element.height-offset.y}px`;
     this.dropIndicator.style.width = `0px`;
 
     const droppableWidth = this.dropIndicator.offsetWidth;
-    const dropIndicatorX = (dx < width/2) 
-      ? (x - xOffset - droppableWidth/2) 
-      : (x + xOffset + width - droppableWidth/2);
+    const dropIndicatorX = (mouseData.dx < element.width/2) 
+      ? (element.x - offset.x - droppableWidth/2) 
+      : (element.x + offset.x + element.width - droppableWidth/2);
 
-    this.dropIndicator.style.top = `${y+yOffset/2}px`;
+    this.dropIndicator.style.top = `${element.y+offset.y/2}px`;
     this.dropIndicator.style.left = `${dropIndicatorX}px`;
   }
+
+
+  showVertIndicator({element, mouseData, offset}: {element: SwdZoneElmentData, mouseData: MouseData, offset: Offset}) {
+    // Todo: complete function
+  }
+  showAreaIndicator({element, mouseData, offset}: {element: SwdZoneElmentData, mouseData: MouseData, offset: Offset}) {
+    // Todo: complete function
+  }
+
 
   enableTransitionAfterDelay() {
     const styles = window.getComputedStyle(this.dropIndicator);
