@@ -11,7 +11,9 @@ class DropIndicator {
     const target = event.target as HTMLElement|null|undefined;
     if(!target) return;
 
-    
+    const styles = window.getComputedStyle(this.dropIndicator);
+    if(styles.display === 'none') this.enableTransitionAfterDelay();
+
     // logic to show drop indicator
     this.dropIndicator.style.display = "block";
 
@@ -31,6 +33,15 @@ class DropIndicator {
 
     this.dropIndicator.style.top = `${y+yOffset/2}px`;
     this.dropIndicator.style.left = `${dropIndicatorX}px`;
+  }
+
+  enableTransitionAfterDelay() {
+    const styles = window.getComputedStyle(this.dropIndicator);
+    const transition = styles.transition;
+    this.dropIndicator.style.transition = 'none';
+    setTimeout(() => {
+      this.dropIndicator.style.transition = transition;
+    });
   }
 
   

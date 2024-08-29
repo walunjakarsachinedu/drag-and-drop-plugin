@@ -1,2 +1,2 @@
 Create a utility class for extracting data from MouseEvent.
-Show the draggable and drop indicator directory without animation at the current position if it was previously hidden.
+Add `swd` scope for all value (to avoid name dublication problem with existing application where this plugin is use)
