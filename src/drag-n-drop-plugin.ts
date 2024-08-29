@@ -1,6 +1,6 @@
 import './index.css';
 import { extractDropZone, extractTargetElement, resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
-import { DropIndicator } from './browser/droppable-indicator';
+import { DropIndicator } from './browser/drop-indicator';
 import { DraggableCopy } from './browser/draggable-copy';
 import { DraggableZone } from './browser/draggable-zone';
 import { DroppableZone } from './browser/droppable-zone';

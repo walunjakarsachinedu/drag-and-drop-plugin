@@ -31,11 +31,11 @@ class DropIndicator {
 
     // Todo: add logic to show indicator different mode 
     //       specifically call different show indicator function
-    this.showHorizIndicator({element: swdZoneElement, mouseData: mouseData, offset: offset});
+    this.showVertIndicator({element: swdZoneElement, mouseData: mouseData, offset: offset});
   }
 
 
-  showHorizIndicator({element, mouseData, offset}: {element: SwdZoneElmentData, mouseData: MouseData, offset: Offset}) {
+  showVertIndicator({element, mouseData, offset}: {element: SwdZoneElmentData, mouseData: MouseData, offset: Offset}) {
     this.dropIndicator.style.height = `${element.height-offset.y}px`;
     this.dropIndicator.style.width = `0px`;
 
@@ -49,7 +49,7 @@ class DropIndicator {
   }
 
 
-  showVertIndicator({element, mouseData, offset}: {element: SwdZoneElmentData, mouseData: MouseData, offset: Offset}) {
+  showHorizIndicator({element, mouseData, offset}: {element: SwdZoneElmentData, mouseData: MouseData, offset: Offset}) {
     // Todo: complete function
   }
   showAreaIndicator({element, mouseData, offset}: {element: SwdZoneElmentData, mouseData: MouseData, offset: Offset}) {
