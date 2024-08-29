@@ -12,6 +12,7 @@ class DraggableCopy {
     if(!this.draggableCopy) return;
     delete this.draggableCopy.dataset.swdZones;
     this.draggableCopy.classList.add("draggable-element");
+    this.draggableCopy.style.display = 'none';
     document.body.appendChild(this.draggableCopy);
   }
 
@@ -23,6 +24,7 @@ class DraggableCopy {
   makeElmFollowMouse(event: MouseEvent) {
     if(!this.draggableCopy) return;
 
+    this.draggableCopy.style.display = "";
     clearTextSelection();
     const width = this.draggableCopy.offsetWidth;
     this.draggableCopy.style.left = `${event.pageX-width/2}px`;
