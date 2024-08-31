@@ -7,18 +7,17 @@ import { extractTargetElement, hasCommonElement } from "../util/utils";
 class DroppableZone {
   private e_hovering: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
   private swdTargets: String[] = [];
-  private previousHandler: any;
+
+  constructor() {
+    document.addEventListener('mousemove', this._hoveringEventEmitter.bind(this));
+  }
   
   /** 
    * extract swd-targets from `event` & setup hovering listener based on value of swd-targets.
   */
   listenToDroppableZone(dropZone: string|undefined) {
     if(!dropZone) return;
-
     this.swdTargets = dropZone.split(' ');
-    this.cleanListener();
-    this.previousHandler = this._hoveringEventEmitter.bind(this);
-    document.addEventListener('mousemove', this.previousHandler);
   }
 
   /**  
@@ -34,9 +33,7 @@ class DroppableZone {
   }
 
   cleanListener() {
-    if(!this.previousHandler) return;
-    document.removeEventListener('mousemove', this.previousHandler);
-    this.previousHandler = null;
+    this.swdTargets = [];
   }
 
   onHovering(handler: EventHandler<MouseEvent>) {
