@@ -18,6 +18,11 @@ type Offset = {
   y: number;
 }
 
+type IndicatorPositionData = {
+  element: SwdZoneElmentData;
+  mouseData: MouseData; 
+  offset: Offset;
+}
 
-export {SwdZoneElmentData, MouseData, Offset};
+export {SwdZoneElmentData, MouseData, Offset, IndicatorPositionData};
 
