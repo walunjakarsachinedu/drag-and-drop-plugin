@@ -1,2 +1,2 @@
-Create a utility class for extracting data from MouseEvent.
 Add `swd` scope for all value (to avoid name dublication problem with existing application where this plugin is use)
+Add support for touch event like mouse event
