@@ -13,7 +13,7 @@ class DraggableZone {
   private e_dragEnd: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
   constructor() {
     SwdMouse.addEventListener('mousedown', (event: SwdEvent) => {
-      if (!event.target.dataset.swdTargets) return;
+      if (!SwdMouse.extractSwdTargets(event)) return;
 
       this.e_dragStart.emit(event);
       isDragging = true;
