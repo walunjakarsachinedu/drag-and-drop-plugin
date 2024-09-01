@@ -1,3 +1,5 @@
+import { SwdEvent } from "../types/types";
+
 function clearTextSelection() {
   const selection = window.getSelection();
   if (selection) {
@@ -9,7 +11,13 @@ function clearTextSelection() {
 function setGlobalCursorStyleToMove() {
   const style = document.createElement('style');
   style.id = 'global-move-cursor';
-  style.innerHTML = `* { cursor: move !important; }`;
+  style.innerHTML = `
+  /* change cursor type */
+  * { cursor: move !important; }
+  /* disable scroll */
+  body {
+  overscroll-behavior: contain;
+}`;
   document.head.appendChild(style);
 }
 
@@ -24,9 +32,6 @@ function extractTargetElement(event: MouseEvent) : HTMLElement|null|undefined {
   return event.target as HTMLElement|null|undefined;
 }
 
-function extractDropZone(event: MouseEvent): string|undefined {
-  return extractTargetElement(event)?.dataset.swdTargets;
-}
 
 function hasCommonElement(arr1: String[], arr2: String[]) :boolean {
   return arr1.some((element) => arr2.includes(element));
@@ -39,6 +44,5 @@ export {
   setGlobalCursorStyleToMove, 
   resetGlobalCursorStyle,
   extractTargetElement,
-  extractDropZone,
   hasCommonElement,
 };

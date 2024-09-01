@@ -1,3 +1,4 @@
+import { SwdEvent } from "../types/types";
 import { clearTextSelection } from "../util/utils";
 
 class DraggableCopy {
@@ -21,14 +22,14 @@ class DraggableCopy {
    * Updates the position of the draggable copy to follow the mouse cursor.
    * @param event - The mouse event.
    */
-  makeElmFollowMouse(event: MouseEvent) {
+  makeElmFollowMouse(event: SwdEvent) {
     if(!this.draggableCopy) return;
 
     this.draggableCopy.style.display = "";
     clearTextSelection();
     const width = this.draggableCopy.offsetWidth;
-    this.draggableCopy.style.left = `${event.pageX-width/2}px`;
-    this.draggableCopy.style.top = `${event.pageY}px`;
+    this.draggableCopy.style.left = `${event.mouseData.x-width/2}px`;
+    this.draggableCopy.style.top = `${event.mouseData.y}px`;
   }
 
 

@@ -1,4 +1,6 @@
+import { SwdEvent } from "../types/types";
 import { EventEmitter, EventHandler } from "../util/event-emitter";
+import { SwdMouse } from "./swd-mouse";
 
 var isDragging = false;
 
@@ -6,25 +8,24 @@ var isDragging = false;
  * Emit event for element with `data-swd-targets` attribute.
 */
 class DraggableZone {
-  private e_dragStart: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
-  private e_dragMove: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
-  private e_dragEnd: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+  private e_dragStart: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
+  private e_dragMove: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
+  private e_dragEnd: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
   constructor() {
-    document.addEventListener('mousedown', (event: MouseEvent) => {
-      const target = event.target as HTMLElement|null|undefined;
-      if (!target?.dataset.swdTargets) return;
+    SwdMouse.addEventListener('mousedown', (event: SwdEvent) => {
+      if (!event.target.dataset.swdTargets) return;
 
       this.e_dragStart.emit(event);
       isDragging = true;
     });
 
-    document.addEventListener('mousemove', (event: MouseEvent) => {
+    SwdMouse.addEventListener('mousemove', (event: SwdEvent) => {
       if(!isDragging) return;
 
       this.e_dragMove.emit(event);
     });
 
-    document.addEventListener('mouseup', (event: MouseEvent) => {
+    SwdMouse.addEventListener('mouseup', (event: SwdEvent) => {
       if(!isDragging) return;
 
       this.e_dragEnd.emit(event);
@@ -32,15 +33,15 @@ class DraggableZone {
     });
   }
 
-  onDragStart(handler: EventHandler<MouseEvent>) {
+  onDragStart(handler: EventHandler<SwdEvent>) {
     this.e_dragStart.addListener(handler);
   }
 
-  onDragMove(handler: EventHandler<MouseEvent>) {
+  onDragMove(handler: EventHandler<SwdEvent>) {
     this.e_dragMove.addListener(handler);
   }
 
-  onDragEnd(handler: EventHandler<MouseEvent>) {
+  onDragEnd(handler: EventHandler<SwdEvent>) {
     this.e_dragEnd.addListener(handler);
   }
 }

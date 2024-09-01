@@ -1,4 +1,4 @@
-import { IndicatorPositionData, MouseData, Offset, SwdZoneElmentData } from "../types/types";
+import { SwdEvent } from "../types/types";
 import { PlaceDropIndicator } from "./place-indicator";
 
 class DropIndicator {
@@ -7,35 +7,18 @@ class DropIndicator {
 
 
   constructor() {
+    this.hideDropIndicator();
     this._dropIndicator.classList.add('drop-indicator');
-    this._dropIndicator.style.display = "none";
     document.body.appendChild(this._dropIndicator);
   }
   
 
-  showDropIndicator(event: MouseEvent) {
-    const target = event.target as HTMLElement|null|undefined;
+  showDropIndicator(event: SwdEvent) {
+    const target = event.target;
     if(!target) return;
 
     this._showElementAndEnableAnimation();
-
-    const dropData = this._prepareIndicatorPositionData(event, target);
-    this._placeIndicator.showVertIndicator(dropData);
-  }
-
-
-  private _prepareIndicatorPositionData(event: MouseEvent, target: HTMLElement) : IndicatorPositionData {
-    const height = target.offsetHeight, width = target.offsetHeight;
-    const x = target.offsetLeft, y = target.offsetTop;
-    const mouseX = event.pageX, mouseY = event.pageY;
-    const dx = mouseX-x, dy = mouseY-y;
-    const xOffset = 10, yOffset = 20;
-
-    const swdZoneElement: SwdZoneElmentData = { x, y, width, height};
-    const mouseData: MouseData = { x: mouseX, y: mouseY, dx, dy, dataset: target.dataset};
-    const offset: Offset = {x: xOffset, y: yOffset};
-
-    return {element: swdZoneElement, mouseData: mouseData, offset: offset};
+    this._placeIndicator.showVertIndicator(event);
   }
 
 

@@ -3,6 +3,8 @@ type SwdZoneElmentData = {
   y: number;
   width: number;
   height: number;
+  dataset: DOMStringMap;
+  elementRef: HTMLElement;
 };
 
 type MouseData = {
@@ -10,7 +12,6 @@ type MouseData = {
   y: number;
   dx: number;
   dy: number;
-  dataset: DOMStringMap;
 }; 
 
 type Offset = {
@@ -18,11 +19,17 @@ type Offset = {
   y: number;
 }
 
-type IndicatorPositionData = {
-  element: SwdZoneElmentData;
+type SwdEvent = {
+  target: SwdZoneElmentData;
   mouseData: MouseData; 
-  offset: Offset;
+  // offset: Offset;
 }
 
-export {SwdZoneElmentData, MouseData, Offset, IndicatorPositionData};
+// type IndicatorPositionData = {
+//   element: SwdZoneElmentData;
+//   mouseData: MouseData; 
+//   offset: Offset;
+// }
+
+export {SwdZoneElmentData, MouseData, Offset, SwdEvent};
 

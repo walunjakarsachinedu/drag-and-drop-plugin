@@ -1,9 +1,10 @@
 import './index.css';
-import { extractDropZone, extractTargetElement, resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
+import { resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
 import { DropIndicator } from './browser/drop-indicator';
 import { DraggableCopy } from './browser/draggable-copy';
 import { DraggableZone } from './browser/draggable-zone';
 import { DroppableZone } from './browser/droppable-zone';
+import { SwdMouse } from './browser/swd-mouse';
 
 
 const draggableZone = new DraggableZone();
@@ -20,8 +21,8 @@ droppableZone.onHovering((event) => {
 
 draggableZone.onDragStart((event) => {
   setGlobalCursorStyleToMove();
-  draggableCopy.addElemCopyToDom(extractTargetElement(event));
-  droppableZone.listenToDroppableZone(extractDropZone(event));
+  draggableCopy.addElemCopyToDom(event.target.elementRef);
+  droppableZone.listenToDroppableZone(SwdMouse.extractSwdTargets(event));
 });
 
 draggableZone.onDragMove((event) => {
