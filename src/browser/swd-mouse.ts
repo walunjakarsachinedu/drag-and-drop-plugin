@@ -23,7 +23,7 @@ class SwdMouse {
     return event.target.dataset.swdTargets;
   }
   static extractSwdZones(event: SwdEvent): string|undefined {
-    return event.target.dataset.swdTargets;
+    return event.target.dataset.swdZones;
   }
 
   private static _convertToNormalListener(listener: (ev: SwdEvent) => any) : (ev: TouchEvent|MouseEvent) => any {

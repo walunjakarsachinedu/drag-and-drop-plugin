@@ -27,7 +27,7 @@ class DroppableZone {
   */
   private _hoveringEventEmitter(event: SwdEvent) {
     const target = event.target;
-    const swdZones = SwdMouse.extractSwdTargets(event)?.split(' ') ?? [];
+    const swdZones = SwdMouse.extractSwdZones(event)?.split(' ') ?? [];
     const isZoneDroppable = target && hasCommonElement(this.swdTargets, swdZones);
     if(!isZoneDroppable) return;
 
