@@ -41,21 +41,33 @@ class SwdMouse {
 
   private static _preparekSwdEventData(event: MouseEvent|TouchEvent) : SwdEvent {
     const target = SwdMouse._getTarget(event);
-    const height = target.offsetHeight, width = target.offsetHeight;
+
+    const swdZoneElement: SwdZoneElmentData = this.getElementData(target);
+    const mouseData: MouseData = this.getMouseData(event);
+
+    return {target: swdZoneElement, mouseData: mouseData};
+  }
+
+  public static getElementData(element: HTMLElement) : SwdZoneElmentData {
+    const height = element.offsetHeight, width = element.offsetHeight;
+    const x = element.offsetLeft, y = element.offsetTop;
+    const swdZoneElement: SwdZoneElmentData = { 
+      x, y, 
+      width, height, 
+      dataset: element.dataset, 
+      elementRef: element
+    };
+    return swdZoneElement;
+  }
+
+  public static getMouseData(event: MouseEvent|TouchEvent) : MouseData {
+    const target = SwdMouse._getTarget(event);
     const x = target.offsetLeft, y = target.offsetTop;
     const mouseX = event instanceof MouseEvent ? event.pageX : SwdMouse.touchData?.pageX!;
     const mouseY = event instanceof MouseEvent ? event.pageY : SwdMouse.touchData?.pageY!;
     const dx = mouseX-x, dy = mouseY-y;
-
-    const swdZoneElement: SwdZoneElmentData = { 
-      x, y, 
-      width, height, 
-      dataset: target.dataset, 
-      elementRef: target
-    };
     const mouseData: MouseData = { x: mouseX, y: mouseY, dx, dy};
-
-    return {target: swdZoneElement, mouseData: mouseData};
+    return mouseData;
   }
 
   private static _getTarget(event: MouseEvent | TouchEvent): HTMLElement {
@@ -96,7 +108,6 @@ class SwdMouse {
     return (touchEvent: TouchEvent) => {
       const touch = this._getTouchEvent(touchEvent.changedTouches);
       if(touch) {
-        console.log(touch);
         SwdMouse.touchData!.target = document.elementFromPoint(touch.pageX, touch.pageY) as HTMLElement;
         SwdMouse.touchData!.pageX = touch.pageX;
         SwdMouse.touchData!.pageY = touch.pageY;
