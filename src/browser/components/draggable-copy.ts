@@ -1,5 +1,5 @@
-import { SwdEvent } from "../types/types";
-import { clearTextSelection } from "../util/utils";
+import { SwdEvent } from "../../types/types";
+import { clearTextSelection } from "../../util/utils";
 
 class DraggableCopy {
   draggableCopy: HTMLElement|null|undefined;

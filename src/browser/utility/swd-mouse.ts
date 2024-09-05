@@ -1,4 +1,4 @@
-import { MouseData, SwdEvent, SwdZoneElmentData } from "../types/types";
+import { MouseData, SwdEvent, SwdZoneElmentData } from "../../types/types";
 
 type SwdTouch = {target: HTMLElement, identifier: number|null, pageX: number, pageY: number};
 

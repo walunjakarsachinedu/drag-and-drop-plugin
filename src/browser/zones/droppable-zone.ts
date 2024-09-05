@@ -1,7 +1,7 @@
-import { SwdEvent } from "../types/types";
-import { EventEmitter, EventHandler } from "../util/event-emitter";
-import { hasCommonElement } from "../util/utils";
-import { SwdMouse } from "./swd-mouse";
+import { SwdEvent } from "../../types/types";
+import { EventEmitter, EventHandler } from "../../util/event-emitter";
+import { hasCommonElement } from "../../util/utils";
+import { SwdMouse } from "../utility/swd-mouse";
 
 /**  
  * Emit event for element with `data-swd-targets` attribute.

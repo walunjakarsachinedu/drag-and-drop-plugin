@@ -1,6 +1,6 @@
-import { SwdEvent } from "../types/types";
-import { EventEmitter, EventHandler } from "../util/event-emitter";
-import { SwdMouse } from "./swd-mouse";
+import { SwdEvent } from "../../types/types";
+import { EventEmitter, EventHandler } from "../../util/event-emitter";
+import { SwdMouse } from "../utility/swd-mouse";
 
 var isDragging = false;
 

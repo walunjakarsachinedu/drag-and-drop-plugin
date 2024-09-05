@@ -1,10 +1,10 @@
 import './index.css';
 import { resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
-import { DropIndicator } from './browser/drop-indicator';
-import { DraggableCopy } from './browser/draggable-copy';
-import { DraggableZone } from './browser/draggable-zone';
-import { DroppableZone } from './browser/droppable-zone';
-import { SwdMouse } from './browser/swd-mouse';
+import { SwdMouse } from './browser/utility/swd-mouse';
+import { DraggableZone } from './browser/zones/draggable-zone';
+import { DroppableZone } from './browser/zones/droppable-zone';
+import { DraggableCopy } from './browser/components/draggable-copy';
+import { DropIndicator } from './browser/components/drop-indicator';
 
 
 const draggableZone = new DraggableZone();

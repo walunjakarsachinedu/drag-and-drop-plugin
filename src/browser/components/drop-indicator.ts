@@ -1,5 +1,5 @@
-import { SwdEvent } from "../types/types";
-import { PlaceDropIndicator } from "./place-indicator";
+import { SwdEvent } from "../../types/types";
+import { PlaceDropIndicator } from "../utility/place-indicator";
 
 class DropIndicator {
   private _dropIndicator: HTMLElement = document.createElement("div");

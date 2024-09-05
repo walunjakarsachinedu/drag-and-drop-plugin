@@ -1,4 +1,4 @@
-import { Offset, SwdEvent } from "../types/types";
+import { Offset, SwdEvent } from "../../types/types";
 
 class PlaceDropIndicator {
   constructor(private _dropIndicator: HTMLElement) { }
