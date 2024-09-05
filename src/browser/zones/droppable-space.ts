@@ -40,6 +40,8 @@ class DroppableSpace {
     if(!dropZoneElement) return;
 
     const elementData : SwdZoneElmentData = SwdMouse.getElementData(dropZoneElement);
+    event.mouseData.dx = event.mouseData.x - elementData.x;
+    event.mouseData.dy = event.mouseData.y - elementData.y;
     this.e_hovering.emit({...event, target: elementData});
   }
   
