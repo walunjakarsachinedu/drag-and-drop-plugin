@@ -34,7 +34,12 @@ class PlaceDropIndicator {
 
 
   showAreaIndicator({target, mouseData}: SwdEvent) {
-    // Todo: complete function
+    const offset: Offset = {x: 10, y: 10};
+    this._dropIndicator.style.width = `${target.width}px`;
+    this._dropIndicator.style.height = `${target.height}px`;
+
+    this._dropIndicator.style.top = `${target.y}px`;
+    this._dropIndicator.style.left = `${target.x}px`;
   }
 
 }

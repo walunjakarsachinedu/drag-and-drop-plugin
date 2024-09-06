@@ -19,7 +19,8 @@ class DropIndicator {
 
     this._showElementAndEnableAnimation();
     // this._placeIndicator.showVertIndicator(event);
-    this._placeIndicator.showHorizIndicator(event);
+    // this._placeIndicator.showHorizIndicator(event);
+    this._placeIndicator.showAreaIndicator(event);
   }
 
 
