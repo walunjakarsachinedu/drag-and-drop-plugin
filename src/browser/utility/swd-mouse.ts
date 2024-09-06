@@ -49,7 +49,7 @@ class SwdMouse {
   }
 
   public static getElementData(element: HTMLElement) : SwdZoneElmentData {
-    const height = element.offsetHeight, width = element.offsetHeight;
+    const height = element.offsetHeight, width = element.offsetWidth;
     const x = element.offsetLeft, y = element.offsetTop;
     const swdZoneElement: SwdZoneElmentData = { 
       x, y, 
