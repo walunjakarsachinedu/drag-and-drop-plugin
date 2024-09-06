@@ -18,7 +18,8 @@ class DropIndicator {
     if(!target) return;
 
     this._showElementAndEnableAnimation();
-    this._placeIndicator.showVertIndicator(event);
+    // this._placeIndicator.showVertIndicator(event);
+    this._placeIndicator.showHorizIndicator(event);
   }
 
 

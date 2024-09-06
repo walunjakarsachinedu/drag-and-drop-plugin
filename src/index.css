@@ -23,8 +23,19 @@ body {
   background-color: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 10px;
-  margin: 20px 10px;
+  margin: 10px 10px;
 } 
+.box-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 300px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  margin: 10px 10px;
+}
 
 .draggable-element {
   margin: 0px;
