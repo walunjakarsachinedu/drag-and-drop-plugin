@@ -25,11 +25,8 @@ type SwdEvent = {
   // offset: Offset;
 }
 
-// type IndicatorPositionData = {
-//   element: SwdZoneElmentData;
-//   mouseData: MouseData; 
-//   offset: Offset;
-// }
+type DropIndicatorMode = 'vertical' | 'horizontal' | 'area';
 
-export {SwdZoneElmentData, MouseData, Offset, SwdEvent};
+
+export {SwdZoneElmentData, MouseData, Offset, SwdEvent, DropIndicatorMode};
 

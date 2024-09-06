@@ -1,4 +1,4 @@
-import { SwdEvent } from "../../types/types";
+import { DropIndicatorMode, SwdEvent } from "../../types/types";
 import { PlaceDropIndicator } from "../utility/place-indicator";
 
 class DropIndicator {
@@ -18,9 +18,21 @@ class DropIndicator {
     if(!target) return;
 
     this._showElementAndEnableAnimation();
-    // this._placeIndicator.showVertIndicator(event);
-    // this._placeIndicator.showHorizIndicator(event);
-    this._placeIndicator.showAreaIndicator(event);
+
+    const mode = this.getDropIndicatorMode(target.elementRef);
+    switch(mode) {
+      case "area": this._placeIndicator.showAreaIndicator(event); break;
+      case "vertical": this._placeIndicator.showVertIndicator(event); break;
+      case "horizontal": this._placeIndicator.showHorizIndicator(event); break;
+    }
+  }
+
+  getDropIndicatorMode(dropZone: HTMLElement) : DropIndicatorMode {
+    if( dropZone.hasAttribute("data-swd-mode") 
+      && dropZone.dataset.swdMode == "area") return "area";
+    if(dropZone.hasAttribute("data-swd-position") 
+      && dropZone.dataset.swdPosition == "horizontal") return "horizontal";
+    return "vertical";
   }
 
 
