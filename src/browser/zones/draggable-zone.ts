@@ -14,6 +14,9 @@ class DraggableZone {
   constructor() {
     SwdMouse.addEventListener('mousedown', (event?: SwdEvent) => {
       if(!event) return;
+      const target = event.target.elementRef.closest('[data-swd-targets]') as HTMLElement|null;
+      if(!target) return;
+      event = SwdMouse.updateTargetOfSwdEvent(event, target);
       if (!SwdMouse.extractSwdTargets(event)) return;
 
       this.e_dragStart.emit(event);

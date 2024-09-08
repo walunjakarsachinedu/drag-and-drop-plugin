@@ -71,6 +71,13 @@ class SwdMouse {
     return mouseData;
   }
 
+  public static updateTargetOfSwdEvent(event: SwdEvent, target: HTMLElement) : SwdEvent {
+    const elementData = SwdMouse.getElementData(target);
+    event.mouseData.dx = event.mouseData.x - elementData.x;
+    event.mouseData.dy = event.mouseData.y - elementData.y;
+    return {...event, target: elementData};
+  }
+
   private static _getTarget(event: MouseEvent | TouchEvent): HTMLElement {
     let target: HTMLElement;
 
