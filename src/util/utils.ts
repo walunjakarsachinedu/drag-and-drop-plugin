@@ -70,6 +70,31 @@ function getSectionOfPoint(
 }
 
 
+/**
+ * Parses a string of key-value pairs in the format:
+ * "key: value, key: value" (e.g., "top: 10, bottom: 10").
+ */
+function parseOffsetString(offsetString: string): { [key: string]: number } {
+  const result: { [key: string]: number } = {};
+  
+  // Split the string by commas to separate each key-value pair
+  const pairs = offsetString.split(',');
+
+  pairs.forEach(pair => {
+      // Split each pair by the colon to separate the key and value
+      const [key, value] = pair.split(':').map(item => item.trim());
+      
+      // Parse the value if value is number
+      if (key && value && !isNaN(Number(value))) {
+          result[key] = Number(value);
+      }
+  });
+
+  return result;
+}
+
+
+
 export {
   clearTextSelection, 
   setGlobalCursorStyleToMove, 
@@ -77,5 +102,6 @@ export {
   extractTargetElement,
   hasCommonElement,
   isPointInRectangle,
-  getSectionOfPoint
+  getSectionOfPoint,
+  parseOffsetString
 };
