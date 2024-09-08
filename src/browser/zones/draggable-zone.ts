@@ -14,9 +14,18 @@ class DraggableZone {
   constructor() {
     SwdMouse.addEventListener('mousedown', (event?: SwdEvent) => {
       if(!event) return;
-      const target = event.target.elementRef.closest('[data-swd-targets]') as HTMLElement|null;
-      if(!target) return;
-      event = SwdMouse.updateTargetOfSwdEvent(event, target);
+
+      if(this._isDragPoint(event)) {
+        const draggable = this._findDraggableAncestor(event);
+        if(!draggable) return;
+        event = SwdMouse.updateTargetOfSwdEvent(event, draggable);
+      }
+      else {
+        const target = event.target.elementRef.closest('[data-swd-targets]:not([data-swd-target-drag-point])') as HTMLElement|null;
+        if(!target) return;
+        event = SwdMouse.updateTargetOfSwdEvent(event, target);
+      }
+
       if (!SwdMouse.extractSwdTargets(event)) return;
 
       this.e_dragStart.emit(event);
@@ -48,6 +57,19 @@ class DraggableZone {
 
   onDragEnd(handler: EventHandler<SwdEvent|undefined>) {
     this.e_dragEnd.addListener(handler);
+  }
+
+  private _isDragPoint(event: SwdEvent) : boolean {
+    const dragPoint = event.target.elementRef.closest('[data-swd-drag-point]') as HTMLElement|null; 
+    return !!dragPoint;
+  }
+
+  private _findDraggableAncestor(event: SwdEvent) : HTMLElement|null {
+    const dragPoint = event.target.elementRef.closest('[data-swd-drag-point]') as HTMLElement|null; 
+    if(!dragPoint) return null;
+    const dragPointValue = dragPoint.dataset.swdDragPoint;
+    const draggable = dragPoint?.closest(`[data-swd-target-drag-point=${dragPointValue}][data-swd-targets]`) as HTMLElement|null;
+    return draggable;
   }
 }
 

@@ -45,6 +45,13 @@ body {
   justify-content: center; 
   border-radius: 10px;
 }
+.chips {
+  background-color: rgba(255,255,255,0.1); 
+  padding: 5px 5px; 
+  margin-top: 8px; 
+  border-radius: 2px; 
+  font-size: 12px;
+}
 
 
 /* plugin specific styles */
@@ -67,6 +74,6 @@ body {
   transition: top 0.3s, left 0.3s, width 0.3s, height 0.3s;
 }
 
-[data-swd-targets] {
+[data-swd-targets]:not([data-swd-target-drag-point]), [data-swd-drag-point] {
   cursor: grab;
 }
