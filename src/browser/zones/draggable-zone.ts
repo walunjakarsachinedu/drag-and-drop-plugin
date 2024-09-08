@@ -10,22 +10,24 @@ var isDragging = false;
 class DraggableZone {
   private e_dragStart: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
   private e_dragMove: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
-  private e_dragEnd: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
+  private e_dragEnd: EventEmitter<SwdEvent|undefined> = new EventEmitter<SwdEvent|undefined>();
   constructor() {
-    SwdMouse.addEventListener('mousedown', (event: SwdEvent) => {
+    SwdMouse.addEventListener('mousedown', (event?: SwdEvent) => {
+      if(!event) return;
       if (!SwdMouse.extractSwdTargets(event)) return;
 
       this.e_dragStart.emit(event);
       isDragging = true;
     });
 
-    SwdMouse.addEventListener('mousemove', (event: SwdEvent) => {
+    SwdMouse.addEventListener('mousemove', (event?: SwdEvent) => {
+      if(!event) return;
       if(!isDragging) return;
 
       this.e_dragMove.emit(event);
     });
 
-    SwdMouse.addEventListener('mouseup', (event: SwdEvent) => {
+    SwdMouse.addEventListener('mouseup', (event?: SwdEvent) => {
       if(!isDragging) return;
 
       this.e_dragEnd.emit(event);
@@ -41,7 +43,7 @@ class DraggableZone {
     this.e_dragMove.addListener(handler);
   }
 
-  onDragEnd(handler: EventHandler<SwdEvent>) {
+  onDragEnd(handler: EventHandler<SwdEvent|undefined>) {
     this.e_dragEnd.addListener(handler);
   }
 }

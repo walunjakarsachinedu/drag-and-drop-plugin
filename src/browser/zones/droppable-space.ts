@@ -28,7 +28,8 @@ class DroppableSpace {
   /**  
    * Emits hovering event for nearest drop zone under, drop space.
   */
-  private _hoveringEventEmitter(event: SwdEvent) {
+  private _hoveringEventEmitter(event?: SwdEvent) {
+    if(!event) return;
     const target = event.target.elementRef;
     const space = target.closest("[data-swd-space]");
     const zone = target.closest("[data-swd-zones]");

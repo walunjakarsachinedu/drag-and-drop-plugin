@@ -5,7 +5,8 @@ type SwdTouch = {target: HTMLElement, identifier: number|null, pageX: number, pa
 class SwdMouse {
   static touchData?: SwdTouch; 
 
-  static addEventListener(type: 'mousedown'|'mousemove'|'mouseup', listener: (ev: SwdEvent) => any) {
+  /** Emits a null SwdEvent if the target is null.  */ 
+  static addEventListener(type: 'mousedown'|'mousemove'|'mouseup', listener: (ev?: SwdEvent) => any) {
     const normalizedListener = SwdMouse._convertToNormalListener(listener);
     switch(type) {
       case 'mousedown': 
@@ -31,11 +32,11 @@ class SwdMouse {
     return event.target.dataset.swdZones;
   }
 
-  private static _convertToNormalListener(listener: (ev: SwdEvent) => any) : (ev: TouchEvent|MouseEvent) => any {
+  private static _convertToNormalListener(listener: (ev?: SwdEvent) => any) : (ev: TouchEvent|MouseEvent) => any {
     return (event: TouchEvent|MouseEvent) => {
-      if(!SwdMouse._getTarget(event)) return;
+      if(!SwdMouse._getTarget(event)) return listener(undefined);
       const data = SwdMouse._preparekSwdEventData(event);
-      listener(data);
+      return listener(data);
     };
   }
 
@@ -85,7 +86,7 @@ class SwdMouse {
   /* ✋ start logic: to restrict single finger touch */
 
   /** Wrap listener in listener which is accepted touch event listener. */
-  private static _onTouchStart(listener: (ev: SwdEvent) => any) : (ev: TouchEvent) => any {
+  private static _onTouchStart(listener: (ev?: SwdEvent) => any) : (ev: TouchEvent) => any {
     const normalizedListener = SwdMouse._convertToNormalListener(listener);
     return (touchEvent: TouchEvent) => {
       const touch = SwdMouse._getTouchEvent(touchEvent.touches);
@@ -103,7 +104,7 @@ class SwdMouse {
 
 
   /** Wrap listener in listener which is accepted touch event listener. */
-  private static _onTouchMove(listener: (ev: SwdEvent) => any) : (ev: TouchEvent) => any {
+  private static _onTouchMove(listener: (ev?: SwdEvent) => any) : (ev: TouchEvent) => any {
     const normalizedListener = SwdMouse._convertToNormalListener(listener);
     return (touchEvent: TouchEvent) => {
       const touch = this._getTouchEvent(touchEvent.changedTouches);
@@ -119,7 +120,7 @@ class SwdMouse {
 
 
   /** Wrap listener in listener which is accepted touch event listener. */
-  private static _onTouchEnd(listener: (ev: SwdEvent) => any) : (ev: TouchEvent) => any {
+  private static _onTouchEnd(listener: (ev?: SwdEvent) => any) : (ev: TouchEvent) => any {
     const normalizedListener = SwdMouse._convertToNormalListener(listener);
     return (touchEvent: TouchEvent) => {
       const touch = this._getTouchEvent(touchEvent.changedTouches);
