@@ -8,6 +8,7 @@ class DropIndicator {
 
   constructor() {
     this.hideDropIndicator();
+    this._dropIndicator.style.pointerEvents = 'none';
     this._dropIndicator.classList.add('drop-indicator');
     document.body.appendChild(this._dropIndicator);
   }

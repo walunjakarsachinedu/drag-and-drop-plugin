@@ -27,6 +27,18 @@ type SwdEvent = {
 
 type DropIndicatorMode = 'vertical' | 'horizontal' | 'area';
 
+type Point = {
+  x: number;
+  y: number;
+};
 
-export {SwdZoneElmentData, MouseData, Offset, SwdEvent, DropIndicatorMode};
+type AreaMap = {
+  top: number[];
+  right: number[];
+  bottom: number[];
+  left: number[]; 
+  cover: number[];
+};
+
+export {SwdZoneElmentData, MouseData, Offset, SwdEvent, DropIndicatorMode, Point, AreaMap};
 

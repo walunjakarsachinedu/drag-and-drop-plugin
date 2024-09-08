@@ -1,4 +1,4 @@
-import { SwdEvent } from "../types/types";
+import { Point } from "../types/types";
 
 function clearTextSelection() {
   const selection = window.getSelection();
@@ -38,6 +38,37 @@ function hasCommonElement(arr1: String[], arr2: String[]) :boolean {
 }
 
 
+function isPointInRectangle(
+  {topLeftPoint, bottomRightPoint, point} : 
+  {topLeftPoint: Point, bottomRightPoint: Point, point: Point}
+): boolean {
+  return (
+    point.x >= topLeftPoint.x &&
+    point.y >= topLeftPoint.y &&
+    point.x <= bottomRightPoint.x &&
+    point.y <= bottomRightPoint.y
+  );
+}
+
+
+function getSectionOfPoint(
+  { rectPosition, rectWidth, rectHeight, point, } :
+  { rectPosition: Point, rectWidth: number, rectHeight: number, point: Point, }
+): number {
+  const centerX = rectPosition.x + rectWidth / 2;
+  const centerY = rectPosition.y + rectHeight / 2;
+
+  const adjacentSide = point.x - centerX;
+  const oppositeSide = point.y - centerY;
+
+  const angle = Math.atan2(oppositeSide, adjacentSide);
+  const adjustedAngle = angle >= 0 ? angle : angle + 2 * Math.PI;
+
+  const section = Math.floor(adjustedAngle / (Math.PI / 4)) + 1;
+
+  return section;
+}
+
 
 export {
   clearTextSelection, 
@@ -45,4 +76,6 @@ export {
   resetGlobalCursorStyle,
   extractTargetElement,
   hasCommonElement,
+  isPointInRectangle,
+  getSectionOfPoint
 };
