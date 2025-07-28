@@ -6,6 +6,7 @@ import { DroppableZone } from './browser/zones/droppable-zone';
 import { DraggableCopy } from './browser/components/draggable-copy';
 import { DropIndicator } from './browser/components/drop-indicator';
 import { DroppableSpace } from './browser/zones/droppable-space';
+import { Scrollable } from './browser/utility/scrollable';
 
 
 const draggableZone = new DraggableZone();
@@ -15,7 +16,7 @@ const droppableSpace = new DroppableSpace();
 const draggableCopy = new DraggableCopy();
 const dropIndicator = new DropIndicator();
 
-
+const scrollable = new Scrollable();
 
 droppableSpace.onHovering((event) => {
   dropIndicator.showDropIndicator(event);
@@ -31,6 +32,7 @@ draggableZone.onDragStart((event) => {
   draggableCopy.addElemCopyToDom(event.target.elementRef);
   droppableZone.listenToDroppableZone(SwdMouse.extractSwdTargets(event));
   droppableSpace.listenToDropZones(SwdMouse.extractSwdTargets(event));
+  scrollable.enableAutoScroll();
 });
 
 draggableZone.onDragMove((event) => {
@@ -43,5 +45,6 @@ draggableZone.onDragEnd(() => {
   dropIndicator.hideDropIndicator();
   droppableZone.cleanListener();
   droppableSpace.cleanListener();
+  scrollable.disableAutoScroll();
 });
 

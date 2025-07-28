@@ -1,0 +1,206 @@
+import { SwdEvent } from "../../types/types";
+import { SwdMouse, SwdSubscription } from "./swd-mouse";
+
+type ScrollDirection = 'top' | 'bottom' | 'left' | 'right';
+
+const direction: ScrollDirection[] = ['top', 'bottom', 'left', 'right'];
+
+interface ScrollData {
+  direction: ScrollDirection; // at concrete level represent edge 
+  distanceFromEdge: number;
+}
+
+class Scrollable {
+  private scrollFrameIds: Partial<Record<ScrollDirection, number>> = {};
+  private scrollDistances: Partial<Record<ScrollDirection, number>> = {};
+  private swdMouseSubscription: SwdSubscription|null = null;
+  private previousTarget: HTMLElement|null = null;
+
+  constructor(
+    /** Distance (in pixels) from the edge of the container at which auto-scrolling starts. */
+    private autoScrollActivationDistance: number = 30, 
+    /** Determines how quickly the scroll speed increases as the pointer gets closer to the edge. */ 
+    private scrollAccelerationRate: number = 2,
+  ) { }
+
+
+  enableAutoScroll() {
+    this.swdMouseSubscription = SwdMouse.addEventListener("mousemove", (ev) => {
+      if(!ev) return;
+      if(this.previousTarget) {
+        const scrollData = this._getScrollData(SwdMouse.updateTargetOfSwdEvent(ev, this.previousTarget));
+        if(scrollData.length > 0) {
+          scrollData.forEach(data => {
+            this.scrollDistances[data.direction] = data.distanceFromEdge;
+          });
+          // stop un-necessary scrolling
+          direction
+            .filter((dir) => !scrollData.some(data => data.direction == dir) && this.scrollFrameIds[dir])
+            .forEach((dir) => {
+                cancelAnimationFrame(this.scrollFrameIds[dir]!);
+                delete this.scrollFrameIds[dir];
+            });
+          scrollData.forEach(data => this._scrollContinously(data.direction));
+        }
+        else {
+          if(ev?.target) {
+            this._searchScrollableAndScroll(ev); 
+          }
+        }
+      }
+      else {
+        if(ev?.target) {
+          this._searchScrollableAndScroll(ev); 
+        }
+      }
+    });
+  }
+
+  disableAutoScroll() {
+    if(this.swdMouseSubscription) {
+      SwdMouse.clearEventListener("mousemove", this.swdMouseSubscription);
+      this.swdMouseSubscription = null;
+    }
+    this._stopScrollInAllDirection();
+  }
+
+
+  private _searchScrollableAndScroll(event: SwdEvent) {
+    const target = event.target.elementRef;
+    const scrollData = this._getScrollData(event);
+    if(scrollData.length > 0) {
+      // cleanup for previous scroll
+      this._stopScrollInAllDirection();
+      scrollData.forEach(data => {
+        this.scrollDistances[data.direction] = data.distanceFromEdge;
+      })
+      // setup for new scroll
+      this.previousTarget = target;
+      scrollData.forEach((data) => this._scrollContinously(data.direction));
+    }
+    else {
+      if(target.parentElement) {
+        this._searchScrollableAndScroll(SwdMouse.updateTargetOfSwdEvent(event, target.parentElement));
+      }
+      else {
+        this._stopScrollInAllDirection();
+      }
+    }
+  }
+
+  private _stopScrollInAllDirection() {
+    Object.values(this.scrollFrameIds).forEach((frameId) => {
+      cancelAnimationFrame(frameId);
+    })
+    this.scrollFrameIds = {};
+    this.scrollDistances = {};
+    this.previousTarget = null;
+  }
+
+  private _stopScrollInDirection(direction: ScrollDirection) {
+    if(this.scrollFrameIds[direction]) {
+      cancelAnimationFrame(this.scrollFrameIds[direction]);
+      delete this.scrollFrameIds[direction];
+      delete this.scrollDistances[direction];
+    }
+  }
+
+  private _getScrollData(event: SwdEvent): ScrollData[] {
+    const { x, y, width, height, elementRef } = event.target;
+    const { x: mouseX, y: mouseY } = event.mouseData;
+    const distance = this.autoScrollActivationDistance;
+    const scrollData: ScrollData[] = [];
+
+    const leftEdge = x;
+    const rightEdge = x + width;
+    const topEdge = y;
+    const bottomEdge = y + height;
+
+    if(elementRef.scrollWidth > elementRef.clientWidth) {
+      const dl = mouseX - leftEdge;
+      const dr = rightEdge - mouseX;
+      if (dl < distance && dl > 0) {
+        scrollData.push({
+          direction: "left",
+          distanceFromEdge: dl,
+        });
+      } else if (dr < distance && dr > 0) {
+        scrollData.push({
+          direction: "right",
+          distanceFromEdge: dr,
+        });
+      }
+    }
+
+    if(elementRef.scrollHeight > elementRef.clientHeight) {
+      const dt = mouseY - topEdge;
+      const db = bottomEdge - mouseY;
+      if (dt  < distance && dt > 0) {
+        scrollData.push({
+          direction: "top",
+          distanceFromEdge: dt,
+        });
+      } else if (db < distance && db > 0) {
+        scrollData.push({
+          direction: "bottom",
+          distanceFromEdge: db,
+        });
+      }
+    }
+
+
+    return scrollData;
+  }
+
+
+  private _scrollContinously(direction: ScrollDirection): void {
+    if(this.scrollFrameIds[direction]) return;
+
+    const scrollFn = () => {
+      if(!this.scrollDistances[direction]) {
+        this._stopScrollInDirection(direction);
+        return;
+      }
+      this._scrollByDirection(
+        direction, 
+        this._getScrollSpeed(this.scrollDistances[direction]),
+      );
+      this.scrollFrameIds[direction] = requestAnimationFrame(scrollFn);
+    };
+
+    this.scrollFrameIds[direction] = requestAnimationFrame(scrollFn);
+  }
+
+  /** Give absolute speed based on how close that dragged element from edge. */
+  private _getScrollSpeed(distanceFromEdge: number): number {
+    const activation = this.autoScrollActivationDistance;
+
+    if (distanceFromEdge >= activation) return 0;
+
+    const ratio = (activation - distanceFromEdge) / activation + 1;
+    return Math.ceil(this.scrollAccelerationRate * ratio * ratio + 5); // quadratic acceleration
+  }
+
+  private _scrollByDirection(direction: ScrollDirection, steps: number): void {
+    if(!this.previousTarget) return;
+
+    const container = this.previousTarget;
+
+    switch (direction) {
+      case 'top':
+        container.scrollBy(0, -steps);
+        break;
+      case 'bottom':
+        container.scrollBy(0, steps);
+        break;
+      case 'left':
+        container.scrollBy(-steps, 0);
+        break;
+      case 'right':
+        container.scrollBy(steps, 0);
+        break;
+    }
+  }
+}
+
+export { Scrollable, ScrollData as ScrollEvent };

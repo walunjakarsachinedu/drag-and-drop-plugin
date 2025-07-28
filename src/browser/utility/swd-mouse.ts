@@ -2,27 +2,59 @@ import { MouseData, SwdEvent, SwdZoneElmentData } from "../../types/types";
 
 type SwdTouch = {target: HTMLElement, identifier: number|null, pageX: number, pageY: number};
 
+type SwdSubscription = {
+  mouseListener: (ev: TouchEvent | MouseEvent) => any;
+  touchListener: (ev: TouchEvent) => any;
+};
+
+type SwdMouseEvent = 'mousedown'|'mousemove'|'mouseup';
+
 class SwdMouse {
   static touchData?: SwdTouch; 
 
   /** Emits a null SwdEvent if the target is null.  */ 
-  static addEventListener(type: 'mousedown'|'mousemove'|'mouseup', listener: (ev?: SwdEvent) => any) {
-    const normalizedListener = SwdMouse._convertToNormalListener(listener);
+  static addEventListener(type: SwdMouseEvent, listener: (ev?: SwdEvent) => any) : SwdSubscription {
+    const mouseListener = SwdMouse._convertToNormalListener(listener);
+    let touchListener: (ev: TouchEvent) => any;
+
     switch(type) {
       case 'mousedown': 
-        document.addEventListener('mousedown', normalizedListener);
-        document.addEventListener('touchstart', SwdMouse._onTouchStart(listener));
+        touchListener = SwdMouse._onTouchStart(listener);
+        document.addEventListener('mousedown', mouseListener);
+        document.addEventListener('touchstart', touchListener);
         break;
       case 'mousemove': 
-        document.addEventListener('mousemove', normalizedListener);
-        document.addEventListener('touchmove', SwdMouse._onTouchMove(listener));
+        touchListener = SwdMouse._onTouchMove(listener);
+        document.addEventListener('mousemove', mouseListener);
+        document.addEventListener('touchmove', touchListener);
         break;
       case 'mouseup': 
-        document.addEventListener('mouseup', normalizedListener);
-        document.addEventListener('touchend', SwdMouse._onTouchEnd(listener));
-        document.addEventListener('touchcancel', SwdMouse._onTouchEnd(listener)); // Fallback for touch cancel
+        touchListener = SwdMouse._onTouchEnd(listener);
+        document.addEventListener('mouseup', mouseListener);
+        document.addEventListener('touchend', touchListener);
+        document.addEventListener('touchcancel', touchListener); // Fallback for touch cancel
         break;
     }
+
+    return { mouseListener, touchListener };
+  }
+
+  static clearEventListener(type: SwdMouseEvent, subscription: SwdSubscription) : void {
+    switch(type) {
+      case 'mousedown': 
+        document.removeEventListener('mousedown', subscription.mouseListener);
+        document.removeEventListener('touchstart', subscription.touchListener);
+        break;
+      case 'mousemove': 
+        document.removeEventListener('mousemove', subscription.mouseListener);
+        document.removeEventListener('touchmove', subscription.touchListener);
+        break;
+      case 'mouseup': 
+        document.removeEventListener('mouseup', subscription.mouseListener);
+        document.removeEventListener('touchend', subscription.touchListener);
+        document.removeEventListener('touchcancel', subscription.touchListener); // Fallback for touch cancel
+        break;
+    } 
   }
 
   static extractSwdTargets(event: SwdEvent): string|undefined {
@@ -49,15 +81,20 @@ class SwdMouse {
     return {target: swdZoneElement, mouseData: mouseData};
   }
 
-  public static getElementData(element: HTMLElement) : SwdZoneElmentData {
-    const height = element.offsetHeight, width = element.offsetWidth;
-    const x = element.offsetLeft, y = element.offsetTop;
-    const swdZoneElement: SwdZoneElmentData = { 
-      x, y, 
-      width, height, 
-      dataset: element.dataset, 
-      elementRef: element
+  public static getElementData(element: HTMLElement): SwdZoneElmentData {
+    const rect = element.getBoundingClientRect();
+    const x = rect.left + window.scrollX;
+    const y = rect.top + window.scrollY;
+    const width = rect.width;
+    const height = rect.height;
+
+    const swdZoneElement: SwdZoneElmentData = {
+      x, y,
+      width, height,
+      dataset: element.dataset,
+      elementRef: element,
     };
+
     return swdZoneElement;
   }
 
@@ -149,4 +186,4 @@ class SwdMouse {
 
 }
 
-export {SwdMouse};
+export { SwdMouse, SwdSubscription };
