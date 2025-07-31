@@ -37,6 +37,7 @@ class DraggableZone {
       if(!isDragging) return;
 
       this.e_dragMove.emit(event);
+      event.preventDefault();
     });
 
     SwdMouse.addEventListener('mouseup', (event?: SwdEvent) => {

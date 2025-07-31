@@ -23,6 +23,7 @@ type SwdEvent = {
   target: SwdZoneElmentData;
   mouseData: MouseData; 
   // offset: Offset;
+  preventDefault: () => void;
 }
 
 type DropIndicatorMode = 'vertical' | 'horizontal' | 'area';

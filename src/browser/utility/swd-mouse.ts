@@ -25,8 +25,8 @@ class SwdMouse {
         break;
       case 'mousemove': 
         touchListener = SwdMouse._onTouchMove(listener);
-        document.addEventListener('mousemove', mouseListener);
-        document.addEventListener('touchmove', touchListener);
+        document.addEventListener('mousemove', mouseListener, true);
+        document.addEventListener('touchmove', touchListener, {passive: false});
         break;
       case 'mouseup': 
         touchListener = SwdMouse._onTouchEnd(listener);
@@ -78,7 +78,11 @@ class SwdMouse {
     const swdZoneElement: SwdZoneElmentData = this.getElementData(target);
     const mouseData: MouseData = this.getMouseData(event);
 
-    return {target: swdZoneElement, mouseData: mouseData};
+    return {
+      target: swdZoneElement, 
+      mouseData: mouseData, 
+      preventDefault: event.preventDefault.bind(event),
+    };
   }
 
   public static getElementData(element: HTMLElement): SwdZoneElmentData {
