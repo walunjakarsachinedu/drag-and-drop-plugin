@@ -77,11 +77,13 @@ class SwdMouse {
 
     const swdZoneElement: SwdZoneElmentData = this.getElementData(target);
     const mouseData: MouseData = this.getMouseData(event);
+    const mouseType: "touch" | "mouse" = event instanceof MouseEvent ? "mouse" : "touch";
 
     return {
       target: swdZoneElement, 
       mouseData: mouseData, 
       preventDefault: event.preventDefault.bind(event),
+      mouseType: mouseType
     };
   }
 

@@ -24,6 +24,7 @@ type SwdEvent = {
   mouseData: MouseData; 
   // offset: Offset;
   preventDefault: () => void;
+  mouseType: "touch" | "mouse";
 }
 
 type DropIndicatorMode = 'vertical' | 'horizontal' | 'area';

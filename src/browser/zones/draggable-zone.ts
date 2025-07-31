@@ -14,7 +14,10 @@ class DraggableZone {
 
   private delayTimeout: NodeJS.Timeout|null = null;
 
-  constructor(private readonly dragDelayInMillis: number = 200) {
+  constructor(
+    /** set delay for touch based device. */
+    private readonly dragDelayInMillis: number = 200
+  ) {
     SwdMouse.addEventListener('mousedown', (event?: SwdEvent) => {
       if(!event) return;
 
@@ -31,10 +34,15 @@ class DraggableZone {
 
       if (!SwdMouse.extractSwdTargets(event)) return;
 
-      this.delayTimeout = setTimeout(() => {
-        this.e_dragStart.emit(event);
-        isDragging = true;
-      }, this.dragDelayInMillis);
+      /// for touch based device, start drag after small delay.
+      if(event.mouseType == "touch") {
+        this.delayTimeout = setTimeout(() => {
+          this._startDrag(event);
+        }, this.dragDelayInMillis);
+      }
+      else {
+        this._startDrag(event);
+      }
     });
 
     SwdMouse.addEventListener('mousemove', (event?: SwdEvent) => {
@@ -65,6 +73,11 @@ class DraggableZone {
 
   onDragEnd(handler: EventHandler<SwdEvent|undefined>) {
     this.e_dragEnd.addListener(handler);
+  }
+
+  private _startDrag(event: SwdEvent) {
+    this.e_dragStart.emit(event);
+    isDragging = true;
   }
 
   private _isDragPoint(event: SwdEvent) : boolean {
