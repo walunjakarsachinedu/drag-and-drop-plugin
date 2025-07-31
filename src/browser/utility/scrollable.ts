@@ -18,9 +18,9 @@ class Scrollable {
 
   constructor(
     /** Distance (in pixels) from the edge of the container at which auto-scrolling starts. */
-    private autoScrollActivationDistance: number = 30, 
+    private readonly autoScrollActivationDistance: number = 30, 
     /** Determines how quickly the scroll speed increases as the pointer gets closer to the edge. */ 
-    private scrollAccelerationRate: number = 2,
+    private readonly scrollAccelerationRate: number = 3,
   ) { }
 
 
@@ -178,7 +178,7 @@ class Scrollable {
     if (distanceFromEdge >= activation) return 0;
 
     const ratio = (activation - distanceFromEdge) / activation + 1;
-    return Math.ceil(this.scrollAccelerationRate * ratio * ratio + 5); // quadratic acceleration
+    return Math.ceil(this.scrollAccelerationRate * ratio * ratio); // quadratic acceleration
   }
 
   private _scrollByDirection(direction: ScrollDirection, steps: number): void {
