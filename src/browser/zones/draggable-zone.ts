@@ -11,7 +11,10 @@ class DraggableZone {
   private e_dragStart: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
   private e_dragMove: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
   private e_dragEnd: EventEmitter<SwdEvent|undefined> = new EventEmitter<SwdEvent|undefined>();
-  constructor() {
+
+  private delayTimeout: NodeJS.Timeout|null = null;
+
+  constructor(private readonly dragDelayInMillis: number = 200) {
     SwdMouse.addEventListener('mousedown', (event?: SwdEvent) => {
       if(!event) return;
 
@@ -28,11 +31,14 @@ class DraggableZone {
 
       if (!SwdMouse.extractSwdTargets(event)) return;
 
-      this.e_dragStart.emit(event);
-      isDragging = true;
+      this.delayTimeout = setTimeout(() => {
+        this.e_dragStart.emit(event);
+        isDragging = true;
+      }, this.dragDelayInMillis);
     });
 
     SwdMouse.addEventListener('mousemove', (event?: SwdEvent) => {
+      this._cancelDrag();
       if(!event) return;
       if(!isDragging) return;
 
@@ -41,6 +47,7 @@ class DraggableZone {
     });
 
     SwdMouse.addEventListener('mouseup', (event?: SwdEvent) => {
+      this._cancelDrag();
       if(!isDragging) return;
 
       this.e_dragEnd.emit(event);
@@ -71,6 +78,12 @@ class DraggableZone {
     const dragPointValue = dragPoint.dataset.swdDragPoint;
     const draggable = dragPoint?.closest(`[data-swd-target-drag-point=${dragPointValue}][data-swd-targets]`) as HTMLElement|null;
     return draggable;
+  }
+
+  private _cancelDrag() { 
+    if(!this.delayTimeout) return;
+    clearTimeout(this.delayTimeout);
+    this.delayTimeout = null;
   }
 }
 
