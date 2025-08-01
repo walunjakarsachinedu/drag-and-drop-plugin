@@ -46,7 +46,7 @@ class SwdMouse {
         document.removeEventListener('touchstart', subscription.touchListener);
         break;
       case 'mousemove': 
-        document.removeEventListener('mousemove', subscription.mouseListener);
+        document.removeEventListener('mousemove', subscription.mouseListener, true);
         document.removeEventListener('touchmove', subscription.touchListener);
         break;
       case 'mouseup': 

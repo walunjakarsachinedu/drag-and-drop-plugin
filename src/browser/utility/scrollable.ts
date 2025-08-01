@@ -20,7 +20,7 @@ class Scrollable {
     /** Distance (in pixels) from the edge of the container at which auto-scrolling starts. */
     private readonly autoScrollActivationDistance: number = 30, 
     /** Determines how quickly the scroll speed increases as the pointer gets closer to the edge. */ 
-    private readonly scrollAccelerationRate: number = 3,
+    private readonly scrollAccelerationRate: number = 5,
   ) { }
 
 
@@ -152,19 +152,34 @@ class Scrollable {
     return scrollData;
   }
 
-
+  /** give consistent speed for all refresh rate. */
   private _scrollContinously(direction: ScrollDirection): void {
     if(this.scrollFrameIds[direction]) return;
 
-    const scrollFn = () => {
-      if(!this.scrollDistances[direction]) {
+    let lastTimestamp: number|null = null;
+    const scrollFn = (timestamp: number) => {
+      const dist = this.scrollDistances[direction];
+      if (!dist) {
         this._stopScrollInDirection(direction);
         return;
       }
-      this._scrollByDirection(
-        direction, 
-        this._getScrollSpeed(this.scrollDistances[direction]),
-      );
+
+      // Initialize lastTimestamp
+      if (lastTimestamp === null) {
+        lastTimestamp = timestamp;
+      }
+
+      // Time elapsed since last frame (ms)
+      const deltaTime = timestamp - lastTimestamp;
+      lastTimestamp = timestamp;
+
+      // Base speed at 60fps
+      const baseSpeed = this._getScrollSpeed(dist);
+
+      // Scale to actual frame time
+      const pixels = baseSpeed * (deltaTime / 16.7);
+
+      this._scrollByDirection(direction, pixels);
       this.scrollFrameIds[direction] = requestAnimationFrame(scrollFn);
     };
 
