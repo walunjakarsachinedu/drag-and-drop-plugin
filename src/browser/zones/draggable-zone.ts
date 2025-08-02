@@ -2,7 +2,21 @@ import { SwdEvent } from "../../types/types";
 import { EventEmitter, EventHandler } from "../../util/event-emitter";
 import { SwdMouse } from "../utility/swd-mouse";
 
-var isDragging = false;
+let isDragging = false;
+let preventScrolling = false;
+
+// Prevent scrolling on touch based device
+// Fix: Chrome allowed scroll when swiping from HTML to search bar
+window.addEventListener(
+  'touchmove',
+  (event) => {
+    if (preventScrolling) {
+      event.preventDefault();
+    }
+  },
+  {passive: false},
+);
+
 
 /**  
  * Emit event for element with `data-swd-targets` attribute.
@@ -49,9 +63,9 @@ class DraggableZone {
       this._cancelDrag();
       if(!event) return;
       if(!isDragging) return;
+      preventScrolling = true;
 
       this.e_dragMove.emit(event);
-      event.preventDefault();
     });
 
     SwdMouse.addEventListener('mouseup', (event?: SwdEvent) => {
@@ -60,6 +74,7 @@ class DraggableZone {
 
       this.e_dragEnd.emit(event);
       isDragging = false;
+      preventScrolling = false;
     });
   }
 
@@ -75,11 +90,6 @@ class DraggableZone {
     this.e_dragEnd.addListener(handler);
   }
 
-  private _startDrag(event: SwdEvent) {
-    this.e_dragStart.emit(event);
-    isDragging = true;
-  }
-
   private _isDragPoint(event: SwdEvent) : boolean {
     const dragPoint = event.target.elementRef.closest('[data-swd-drag-point]') as HTMLElement|null; 
     return !!dragPoint;
@@ -91,6 +101,12 @@ class DraggableZone {
     const dragPointValue = dragPoint.dataset.swdDragPoint;
     const draggable = dragPoint?.closest(`[data-swd-target-drag-point=${dragPointValue}][data-swd-targets]`) as HTMLElement|null;
     return draggable;
+  }
+
+
+  private _startDrag(event: SwdEvent) {
+    this.e_dragStart.emit(event);
+    isDragging = true;
   }
 
   private _cancelDrag() { 
