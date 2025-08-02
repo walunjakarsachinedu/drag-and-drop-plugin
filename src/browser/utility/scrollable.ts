@@ -1,4 +1,4 @@
-import { SwdEvent } from "../../types/types";
+import { SwdEventWithTarget } from "../../types/types";
 import { SwdMouse, SwdSubscription } from "./swd-mouse";
 
 type ScrollDirection = 'top' | 'bottom' | 'left' | 'right';
@@ -25,8 +25,7 @@ class Scrollable {
 
 
   enableAutoScroll() {
-    this.swdMouseSubscription = SwdMouse.addEventListener("mousemove", (ev) => {
-      if(!ev) return;
+    this.swdMouseSubscription = SwdMouse.addEventListenerWithTarget("mousemove", (ev: SwdEventWithTarget) => {
       if(this.previousTarget) {
         const scrollData = this._getScrollData(SwdMouse.updateTargetOfSwdEvent(ev, this.previousTarget));
         if(scrollData.length > 0) {
@@ -43,15 +42,11 @@ class Scrollable {
           scrollData.forEach(data => this._scrollContinously(data.direction));
         }
         else {
-          if(ev?.target) {
-            this._searchScrollableAndScroll(ev); 
-          }
+          this._searchScrollableAndScroll(ev); 
         }
       }
       else {
-        if(ev?.target) {
-          this._searchScrollableAndScroll(ev); 
-        }
+        this._searchScrollableAndScroll(ev); 
       }
     });
   }
@@ -65,7 +60,7 @@ class Scrollable {
   }
 
 
-  private _searchScrollableAndScroll(event: SwdEvent) {
+  private _searchScrollableAndScroll(event: SwdEventWithTarget) {
     const target = event.target.elementRef;
     const scrollData = this._getScrollData(event);
     if(scrollData.length > 0) {
@@ -105,7 +100,7 @@ class Scrollable {
     }
   }
 
-  private _getScrollData(event: SwdEvent): ScrollData[] {
+  private _getScrollData(event: SwdEventWithTarget): ScrollData[] {
     const { x, y, width, height, elementRef } = event.target;
     const { x: mouseX, y: mouseY } = event.mouseData;
     const distance = this.autoScrollActivationDistance;

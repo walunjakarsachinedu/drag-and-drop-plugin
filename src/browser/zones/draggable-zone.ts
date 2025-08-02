@@ -1,4 +1,4 @@
-import { SwdEvent } from "../../types/types";
+import { SwdEvent, SwdEventWithTarget } from "../../types/types";
 import { EventEmitter, EventHandler } from "../../util/event-emitter";
 import { SwdMouse } from "../utility/swd-mouse";
 
@@ -22,9 +22,9 @@ window.addEventListener(
  * Emit event for element with `data-swd-targets` attribute.
 */
 class DraggableZone {
-  private e_dragStart: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
+  private e_dragStart: EventEmitter<SwdEventWithTarget> = new EventEmitter<SwdEventWithTarget>();
   private e_dragMove: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
-  private e_dragEnd: EventEmitter<SwdEvent|undefined> = new EventEmitter<SwdEvent|undefined>();
+  private e_dragEnd: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
 
   private delayTimeout: NodeJS.Timeout|null = null;
 
@@ -32,9 +32,7 @@ class DraggableZone {
     /** set delay for touch based device. */
     private readonly dragDelayInMillis: number = 200
   ) {
-    SwdMouse.addEventListener('mousedown', (event?: SwdEvent) => {
-      if(!event) return;
-
+    SwdMouse.addEventListenerWithTarget('mousedown', (event: SwdEventWithTarget) => {
       if(this._isDragPoint(event)) {
         const draggable = this._findDraggableAncestor(event);
         if(!draggable) return;
@@ -45,8 +43,6 @@ class DraggableZone {
         if(!target) return;
         event = SwdMouse.updateTargetOfSwdEvent(event, target);
       }
-
-      if (!SwdMouse.extractSwdTargets(event)) return;
 
       /// for touch based device, start drag after small delay.
       if(event.mouseType == "touch") {
@@ -59,16 +55,15 @@ class DraggableZone {
       }
     });
 
-    SwdMouse.addEventListener('mousemove', (event?: SwdEvent) => {
+    SwdMouse.addEventListener('mousemove', (event: SwdEvent) => {
       this._cancelDrag();
-      if(!event) return;
       if(!isDragging) return;
       preventScrolling = true;
 
       this.e_dragMove.emit(event);
     });
 
-    SwdMouse.addEventListener('mouseup', (event?: SwdEvent) => {
+    SwdMouse.addEventListener('mouseup', (event: SwdEvent) => {
       this._cancelDrag();
       if(!isDragging) return;
 
@@ -78,7 +73,7 @@ class DraggableZone {
     });
   }
 
-  onDragStart(handler: EventHandler<SwdEvent>) {
+  onDragStart(handler: EventHandler<SwdEventWithTarget>) {
     this.e_dragStart.addListener(handler);
   }
 
@@ -90,12 +85,12 @@ class DraggableZone {
     this.e_dragEnd.addListener(handler);
   }
 
-  private _isDragPoint(event: SwdEvent) : boolean {
+  private _isDragPoint(event: SwdEventWithTarget) : boolean {
     const dragPoint = event.target.elementRef.closest('[data-swd-drag-point]') as HTMLElement|null; 
     return !!dragPoint;
   }
 
-  private _findDraggableAncestor(event: SwdEvent) : HTMLElement|null {
+  private _findDraggableAncestor(event: SwdEventWithTarget) : HTMLElement|null {
     const dragPoint = event.target.elementRef.closest('[data-swd-drag-point]') as HTMLElement|null; 
     if(!dragPoint) return null;
     const dragPointValue = dragPoint.dataset.swdDragPoint;
@@ -104,7 +99,7 @@ class DraggableZone {
   }
 
 
-  private _startDrag(event: SwdEvent) {
+  private _startDrag(event: SwdEventWithTarget) {
     this.e_dragStart.emit(event);
     isDragging = true;
   }

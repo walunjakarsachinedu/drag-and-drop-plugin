@@ -1,17 +1,18 @@
-import { AreaMap, Offset, Point, SwdEvent } from "../../types/types";
+import { AreaMap, Offset, Point, SwdEventWithTarget } from "../../types/types";
 import { getSectionOfPoint, isPointInRectangle, parseOffsetString } from "../../util/utils";
+import { SwdMouse } from "./swd-mouse";
 
 class PlaceDropIndicator {
   constructor(private _dropIndicator: HTMLElement) { }
 
-  showVertIndicator({target, mouseData}: SwdEvent) {
+  showVertIndicator({target, mouseData}: SwdEventWithTarget) {
     const offsetMap = parseOffsetString(target.elementRef.dataset.swdOffset ?? "");
     const offset: Offset = {x: 10, y: 10};
     this._dropIndicator.style.height = `${target.height-offset.y}px`;
     this._dropIndicator.style.width = `0px`;
 
-    const droppableWidth = this._dropIndicator.offsetWidth;
-    const dropIndicatorX = (mouseData.dx < target.width/2) 
+    const mouseOffset = SwdMouse.getMouseOffset(target.elementRef, mouseData);
+    const dropIndicatorX = (mouseOffset.x < target.width/2) 
       ? (target.x - (offsetMap["left"] ?? offset.x)) // placing at left side
       : (target.x + target.width + (offsetMap["right"] ?? offset.x)); // placing at right side
 
@@ -20,14 +21,14 @@ class PlaceDropIndicator {
   }
 
 
-  showHorizIndicator({target, mouseData}: SwdEvent) {
+  showHorizIndicator({target, mouseData}: SwdEventWithTarget) {
     const offsetMap = parseOffsetString(target.elementRef.dataset.swdOffset ?? "");
     const offset: Offset = {x: 10, y: 10};
     this._dropIndicator.style.width = `${target.width-offset.x}px`;
     this._dropIndicator.style.height = `0px`;
 
-    const droppableHeight = this._dropIndicator.offsetHeight;
-    const dropIndicatorY = (mouseData.dy < target.height/2) 
+    const mouseOffset = SwdMouse.getMouseOffset(target.elementRef, mouseData);
+    const dropIndicatorY = (mouseOffset.y < target.height/2) 
       ? (target.y - (offsetMap["top"] ?? offset.y))  // placing at top side
       : (target.y + target.height + (offsetMap["bottom"] ?? offset.y));  // placing at bottom side
 
@@ -36,7 +37,7 @@ class PlaceDropIndicator {
   }
 
 
-  showAreaIndicator(event: SwdEvent) {
+  showAreaIndicator(event: SwdEventWithTarget) {
     const {target} = event;
     const areaNumber = this._getAreaNumber(event);
     const areaMap = this._prepareAreaMap(event);
@@ -70,7 +71,7 @@ class PlaceDropIndicator {
   }
 
 
-  private _getAreaNumber({target, mouseData}: SwdEvent) : number {
+  private _getAreaNumber({target, mouseData}: SwdEventWithTarget) : number {
     if(isPointInRectangle({
       topLeftPoint: {
         x: target.x + target.width/3, 
@@ -91,7 +92,7 @@ class PlaceDropIndicator {
     });
   }
 
-  private _prepareAreaMap({target}: SwdEvent) : AreaMap {
+  private _prepareAreaMap({target}: SwdEventWithTarget) : AreaMap {
     const areas: String[] = (target.dataset.swdArea?.split(' ') ?? []).map(v => v.toLowerCase());
     const areaMap: AreaMap = {top: [6,7], right: [1,8], bottom: [2,3], left: [4,5], cover: [9]};
     
@@ -123,4 +124,4 @@ class PlaceDropIndicator {
   
 }
 
-export {PlaceDropIndicator};
+export { PlaceDropIndicator };

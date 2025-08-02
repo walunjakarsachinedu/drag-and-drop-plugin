@@ -1,4 +1,4 @@
-import { MouseData, SwdEvent, SwdZoneElmentData } from "../../types/types";
+import { MouseData, Offset, SwdEvent, SwdEventWithTarget, SwdZoneElmentData } from "../../types/types";
 
 type SwdTouch = {target: HTMLElement, identifier: number|null, pageX: number, pageY: number};
 
@@ -12,8 +12,16 @@ type SwdMouseEvent = 'mousedown'|'mousemove'|'mouseup';
 class SwdMouse {
   static touchData?: SwdTouch; 
 
-  /** Emits a null SwdEvent if the target is null.  */ 
-  static addEventListener(type: SwdMouseEvent, listener: (ev?: SwdEvent) => any) : SwdSubscription {
+  /** Only emit events with target. */
+  static addEventListenerWithTarget(type: SwdMouseEvent, listener: (ev: SwdEventWithTarget) => any) : SwdSubscription {
+    return this.addEventListener(type, (event) => {
+      if(SwdMouse.isEventWithTarget(event)) {
+        listener(event);
+      }
+    });
+  }
+
+  static addEventListener(type: SwdMouseEvent, listener: (ev: SwdEvent) => any) : SwdSubscription {
     const mouseListener = SwdMouse._convertToNormalListener(listener);
     let touchListener: (ev: TouchEvent) => any;
 
@@ -57,16 +65,15 @@ class SwdMouse {
     } 
   }
 
-  static extractSwdTargets(event: SwdEvent): string|undefined {
+  static extractSwdTargets(event: SwdEventWithTarget): string|undefined {
     return event.target.dataset.swdTargets;
   }
-  static extractSwdZones(event: SwdEvent): string|undefined {
+  static extractSwdZones(event: SwdEventWithTarget): string|undefined {
     return event.target.dataset.swdZones;
   }
 
-  private static _convertToNormalListener(listener: (ev?: SwdEvent) => any) : (ev: TouchEvent|MouseEvent) => any {
+  private static _convertToNormalListener(listener: (ev: SwdEvent) => any) : (ev: TouchEvent|MouseEvent) => any {
     return (event: TouchEvent|MouseEvent) => {
-      if(!SwdMouse._getTarget(event)) return listener(undefined);
       const data = SwdMouse._preparekSwdEventData(event);
       return listener(data);
     };
@@ -75,7 +82,7 @@ class SwdMouse {
   private static _preparekSwdEventData(event: MouseEvent|TouchEvent) : SwdEvent {
     const target = SwdMouse._getTarget(event);
 
-    const swdZoneElement: SwdZoneElmentData = this.getElementData(target);
+    const swdZoneElement: SwdZoneElmentData|undefined = target ? this.getElementData(target) : undefined;
     const mouseData: MouseData = this.getMouseData(event);
     const mouseType: "touch" | "mouse" = event instanceof MouseEvent ? "mouse" : "touch";
 
@@ -105,38 +112,36 @@ class SwdMouse {
   }
 
   public static getMouseData(event: MouseEvent|TouchEvent) : MouseData {
-    const target = SwdMouse._getTarget(event);
-    const x = target.offsetLeft, y = target.offsetTop;
     const mouseX = event instanceof MouseEvent ? event.pageX : SwdMouse.touchData?.pageX!;
     const mouseY = event instanceof MouseEvent ? event.pageY : SwdMouse.touchData?.pageY!;
-    const dx = mouseX-x, dy = mouseY-y;
-    const mouseData: MouseData = { x: mouseX, y: mouseY, dx, dy};
+    const mouseData: MouseData = { x: mouseX, y: mouseY};
     return mouseData;
   }
 
-  public static updateTargetOfSwdEvent(event: SwdEvent, target: HTMLElement) : SwdEvent {
+  public static getMouseOffset(target: HTMLElement, mouse: MouseData) : Offset {
+    const x = target.offsetLeft, y = target.offsetTop;
+    const dx = mouse.x-x, dy = mouse.y-y;
+    return {x: dx, y: dy};
+  }
+
+  public static updateTargetOfSwdEvent(event: SwdEvent, target: HTMLElement) : SwdEventWithTarget {
     const elementData = SwdMouse.getElementData(target);
-    event.mouseData.dx = event.mouseData.x - elementData.x;
-    event.mouseData.dy = event.mouseData.y - elementData.y;
     return {...event, target: elementData};
   }
 
-  private static _getTarget(event: MouseEvent | TouchEvent): HTMLElement {
-    let target: HTMLElement;
-
+  private static _getTarget(event: MouseEvent | TouchEvent): HTMLElement|undefined {
     if (event instanceof MouseEvent) {
-        target = event.target as HTMLElement;
+        return event.target as HTMLElement;
     } else if (event instanceof TouchEvent) {
-        target = SwdMouse.touchData!.target as HTMLElement;
+        return SwdMouse.touchData!.target as HTMLElement;
     }
-    return target!;
   }
 
 
   /* ✋ start logic: to restrict single finger touch */
 
   /** Wrap listener in listener which is accepted touch event listener. */
-  private static _onTouchStart(listener: (ev?: SwdEvent) => any) : (ev: TouchEvent) => any {
+  private static _onTouchStart(listener: (ev: SwdEvent) => any) : (ev: TouchEvent) => any {
     const normalizedListener = SwdMouse._convertToNormalListener(listener);
     return (touchEvent: TouchEvent) => {
       const touch = SwdMouse._getTouchEvent(touchEvent.touches);
@@ -154,7 +159,7 @@ class SwdMouse {
 
 
   /** Wrap listener in listener which is accepted touch event listener. */
-  private static _onTouchMove(listener: (ev?: SwdEvent) => any) : (ev: TouchEvent) => any {
+  private static _onTouchMove(listener: (ev: SwdEvent) => any) : (ev: TouchEvent) => any {
     const normalizedListener = SwdMouse._convertToNormalListener(listener);
     return (touchEvent: TouchEvent) => {
       const touch = this._getTouchEvent(touchEvent.changedTouches);
@@ -170,7 +175,7 @@ class SwdMouse {
 
 
   /** Wrap listener in listener which is accepted touch event listener. */
-  private static _onTouchEnd(listener: (ev?: SwdEvent) => any) : (ev: TouchEvent) => any {
+  private static _onTouchEnd(listener: (ev: SwdEvent) => any) : (ev: TouchEvent) => any {
     const normalizedListener = SwdMouse._convertToNormalListener(listener);
     return (touchEvent: TouchEvent) => {
       const touch = this._getTouchEvent(touchEvent.changedTouches);
@@ -187,6 +192,9 @@ class SwdMouse {
     return undefined;
   }
 
+  static isEventWithTarget(event?: SwdEvent|SwdEventWithTarget): event is SwdEventWithTarget {
+    return !!event?.target;
+  }
 
   /* 🛑 end logic: to restrict single finger touch */
 

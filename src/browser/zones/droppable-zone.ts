@@ -1,4 +1,4 @@
-import { SwdEvent } from "../../types/types";
+import { SwdEvent, SwdEventWithTarget } from "../../types/types";
 import { EventEmitter, EventHandler } from "../../util/event-emitter";
 import { hasCommonElement } from "../../util/utils";
 import { SwdMouse } from "../utility/swd-mouse";
@@ -7,11 +7,11 @@ import { SwdMouse } from "../utility/swd-mouse";
  * Emit event for element with `data-swd-targets` attribute.
 */
 class DroppableZone {
-  private e_hovering: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
+  private e_hovering: EventEmitter<SwdEventWithTarget> = new EventEmitter<SwdEventWithTarget>();
   private swdTargets: String[] = [];
 
   constructor() {
-    SwdMouse.addEventListener('mousemove', this._hoveringEventEmitter.bind(this));
+    SwdMouse.addEventListenerWithTarget('mousemove', this._hoveringEventEmitter.bind(this));
   }
   
   /** 
@@ -25,8 +25,7 @@ class DroppableZone {
   /**  
    * emits event when hovering droppable zone.
   */
-  private _hoveringEventEmitter(event?: SwdEvent) {
-    if(!event) return;
+  private _hoveringEventEmitter(event: SwdEventWithTarget) {
     const target = event.target.elementRef.closest('[data-swd-zones]') as HTMLElement|null;
     if(!target) return;
     event = SwdMouse.updateTargetOfSwdEvent(event, target);
@@ -41,7 +40,7 @@ class DroppableZone {
     this.swdTargets = [];
   }
 
-  onHovering(handler: EventHandler<SwdEvent>) {
+  onHovering(handler: EventHandler<SwdEventWithTarget>) {
     this.e_hovering.addListener(handler);
   }
 }

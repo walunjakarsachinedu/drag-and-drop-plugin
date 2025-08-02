@@ -10,8 +10,6 @@ type SwdZoneElmentData = {
 type MouseData = {
   x: number;
   y: number;
-  dx: number;
-  dy: number;
 }; 
 
 type Offset = {
@@ -20,12 +18,18 @@ type Offset = {
 }
 
 type SwdEvent = {
-  target: SwdZoneElmentData;
-  mouseData: MouseData; 
-  // offset: Offset;
+  target?: SwdZoneElmentData;
+  mouseData: MouseData;
   preventDefault: () => void;
   mouseType: "touch" | "mouse";
-}
+};
+
+/** SwdEvent with target defined. */
+type SwdEventWithTarget = SwdEvent & {
+  // made target required
+  target: SwdZoneElmentData; 
+};
+
 
 type DropIndicatorMode = 'vertical' | 'horizontal' | 'area';
 
@@ -42,5 +46,14 @@ type AreaMap = {
   cover: number[];
 };
 
-export {SwdZoneElmentData, MouseData, Offset, SwdEvent, DropIndicatorMode, Point, AreaMap};
+export {
+  AreaMap,
+  DropIndicatorMode,
+  MouseData,
+  Offset,
+  Point,
+  SwdEvent,
+  SwdEventWithTarget,
+  SwdZoneElmentData
+};
 

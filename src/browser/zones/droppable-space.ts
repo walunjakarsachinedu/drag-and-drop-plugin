@@ -1,4 +1,4 @@
-import { MouseData, SwdEvent, SwdZoneElmentData } from "../../types/types";
+import { MouseData, SwdEvent, SwdEventWithTarget } from "../../types/types";
 import { EventEmitter, EventHandler } from "../../util/event-emitter";
 import { hasCommonElement } from "../../util/utils";
 import { SwdMouse } from "../utility/swd-mouse";
@@ -10,11 +10,11 @@ import { SwdMouse } from "../utility/swd-mouse";
  * 
 */
 class DroppableSpace {
-  private e_hovering: EventEmitter<SwdEvent> = new EventEmitter<SwdEvent>();
+  private e_hovering: EventEmitter<SwdEventWithTarget> = new EventEmitter<SwdEventWithTarget>();
   private swdTargets: String[] = [];
 
   constructor() {
-    SwdMouse.addEventListener('mousemove', this._hoveringEventEmitter.bind(this));
+    SwdMouse.addEventListenerWithTarget('mousemove', this._hoveringEventEmitter.bind(this));
   }
   
   /** 
@@ -28,8 +28,7 @@ class DroppableSpace {
   /**  
    * Emits hovering event for nearest drop zone under, drop space.
   */
-  private _hoveringEventEmitter(event?: SwdEvent) {
-    if(!event) return;
+  private _hoveringEventEmitter(event: SwdEventWithTarget) {
     const target = event.target.elementRef;
     const space = target.closest("[data-swd-space]");
     const zone = target.closest("[data-swd-zones]");
@@ -45,7 +44,7 @@ class DroppableSpace {
   }
   
 
-  private getNearestDropZoneToMouse(event: SwdEvent) : HTMLElement | null {
+  private getNearestDropZoneToMouse(event: SwdEventWithTarget) : HTMLElement | null {
     const target = event.target.elementRef;
     const children = Array.from(target.querySelectorAll('[data-swd-zones]')).filter((child: Element) => {
       const swdZones = (child as HTMLElement).dataset.swdZones?.split(' ') ?? [];
@@ -84,7 +83,7 @@ class DroppableSpace {
     this.swdTargets = [];
   }
 
-  onHovering(handler: EventHandler<SwdEvent>) {
+  onHovering(handler: EventHandler<SwdEventWithTarget>) {
     this.e_hovering.addListener(handler);
   }
 }

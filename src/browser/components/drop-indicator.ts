@@ -1,4 +1,4 @@
-import { DropIndicatorMode, SwdEvent } from "../../types/types";
+import { DropIndicatorMode, SwdEventWithTarget } from "../../types/types";
 import { PlaceDropIndicator } from "../utility/place-indicator";
 
 class DropIndicator {
@@ -14,7 +14,7 @@ class DropIndicator {
   }
   
 
-  showDropIndicator(event: SwdEvent) {
+  showDropIndicator(event: SwdEventWithTarget) {
     const target = event.target;
     if(!target) return;
 
