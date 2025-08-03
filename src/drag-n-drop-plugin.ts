@@ -1,5 +1,5 @@
 import './index.css';
-import { resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
+import { isInDropZoneOrSpace, resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
 import { SwdMouse } from './browser/utility/swd-mouse';
 import { DraggableZone } from './browser/zones/draggable-zone';
 import { DroppableZone } from './browser/zones/droppable-zone';
@@ -37,6 +37,9 @@ draggableZone.onDragStart((event) => {
 
 draggableZone.onDragMove((event) => {
   draggableCopy.makeElmFollowMouse(event);
+  if(!isInDropZoneOrSpace(event)) {
+    dropIndicator.hideDropIndicator();
+  }
 });
 
 draggableZone.onDragEnd(() => {

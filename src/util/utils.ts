@@ -1,4 +1,5 @@
-import { Point } from "../types/types";
+import { SwdMouse } from "../browser/utility/swd-mouse";
+import { Point, SwdEvent } from "../types/types";
 
 function clearTextSelection() {
   const selection = window.getSelection();
@@ -93,6 +94,17 @@ function parseOffsetString(offsetString: string): { [key: string]: number } {
   return result;
 }
 
+/** Check if cursor is over a drop zone or drop space. */
+function isInDropZoneOrSpace(event: SwdEvent) {
+  if(SwdMouse.isEventWithTarget(event)) {
+    const target = event.target?.elementRef;
+    const space = target.closest("[data-swd-space]");
+    const zone = target.closest("[data-swd-zones]");
+    return zone || space;
+  }
+  return false;
+}
+
 
 
 export {
@@ -103,5 +115,6 @@ export {
   hasCommonElement,
   isPointInRectangle,
   getSectionOfPoint,
-  parseOffsetString
+  parseOffsetString,
+  isInDropZoneOrSpace
 };
