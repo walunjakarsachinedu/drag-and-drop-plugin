@@ -17,6 +17,14 @@ type Offset = {
   y: number;
 }
 
+// represent offset for drop indicator in px
+type OffsetMap = {
+  top?: number; 
+  bottom?: number; 
+  right?: number; 
+  left?: number;
+}
+
 type SwdEvent = {
   target?: SwdZoneElmentData;
   mouseData: MouseData;
@@ -38,22 +46,37 @@ type Point = {
   y: number;
 };
 
+type VerticalInsertEdge = "vt" | "vb";
+type HorizontalInsertEdge = "hl" | "hr"; 
+type InsertEdge = VerticalInsertEdge | HorizontalInsertEdge ;
+type ReplaceRegion = "al" | "ar" | "at" | "ab" | "ac";
+type Area =  InsertEdge | ReplaceRegion;
+
 type AreaMap = {
-  top: number[];
-  right: number[];
-  bottom: number[];
-  left: number[]; 
-  cover: number[];
+  [key in ReplaceRegion]: number[];
 };
+
+type DropEvent = SwdEventWithTarget & {
+  /** possible position for placement of drop indicator such that after placing it, the indicator remain in bound. */
+  placement: Area;
+};
+
 
 export {
   AreaMap,
   DropIndicatorMode,
   MouseData,
   Offset,
+  OffsetMap,
   Point,
   SwdEvent,
   SwdEventWithTarget,
-  SwdZoneElmentData
+  SwdZoneElmentData,
+  DropEvent,
+  VerticalInsertEdge,
+  HorizontalInsertEdge,
+  InsertEdge, 
+  ReplaceRegion,
+  Area
 };
 

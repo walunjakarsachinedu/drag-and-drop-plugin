@@ -1,9 +1,9 @@
 import { DropIndicatorMode, SwdEventWithTarget } from "../../types/types";
-import { PlaceDropIndicator } from "../utility/place-indicator";
+import { DropIndicatorUtility } from "../utility/drop-indicator-utility";
 
 class DropIndicator {
   private _dropIndicator: HTMLElement = document.createElement("div");
-  private _placeIndicator = new PlaceDropIndicator(this._dropIndicator);
+  private _dropUtility = new DropIndicatorUtility(this._dropIndicator);
 
 
   constructor() {
@@ -19,12 +19,9 @@ class DropIndicator {
     if(!target) return;
 
     this._showElementAndEnableAnimation();
-
-    const mode = this.getDropIndicatorMode(target.elementRef);
-    switch(mode) {
-      case "area": this._placeIndicator.showAreaIndicator(event); break;
-      case "vertical": this._placeIndicator.showVertIndicator(event); break;
-      case "horizontal": this._placeIndicator.showHorizIndicator(event); break;
+    const pos = this._dropUtility.getDropPosition(event);
+    if(pos) {
+      this._dropUtility.placeIndicatorAtArea(target, pos);
     }
   }
 
@@ -43,6 +40,7 @@ class DropIndicator {
 
     // show element
     this._dropIndicator.style.display = "block";
+    this._dropIndicator.style.pointerEvents = 'none';
 
     // enable animation
     const transition = styles.transition;

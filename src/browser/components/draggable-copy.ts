@@ -30,6 +30,7 @@ class DraggableCopy {
     const width = this.draggableCopy.offsetWidth;
     this.draggableCopy.style.left = `${event.mouseData.x-width/2}px`;
     this.draggableCopy.style.top = `${event.mouseData.y}px`;
+    this.draggableCopy.style.pointerEvents = 'none';
   }
 
 

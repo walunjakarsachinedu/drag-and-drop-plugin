@@ -118,6 +118,7 @@ class SwdMouse {
     return mouseData;
   }
 
+  /** Gives position of pointer relative target element. */
   public static getMouseOffset(target: HTMLElement, mouse: MouseData) : Offset {
     const x = target.offsetLeft, y = target.offsetTop;
     const dx = mouse.x-x, dy = mouse.y-y;
