@@ -20,10 +20,10 @@ class DropIndicatorUtility {
 
   placeIndicatorAtArea(target: SwdZoneElmentData, area: Area) {
     if(area == "hl" || area == "hr") {
-      this._showVertIndicator(target, area);
+      this._showHorizIndicator(target, area);
     }
     if(area == "vt" || area == "vb") {
-      this._showHorizIndicator(target, area);
+      this._showVertIndicator(target, area);
     }
     if(area == 'al' || area == 'ar' || area == 'at' || area == 'ab' || area == 'ac') {
       this._showAreaIndicator(target, area);
@@ -31,7 +31,7 @@ class DropIndicatorUtility {
   }
 
   /** Show indicator vertically at left or right. */
-  private _showVertIndicator(target: SwdZoneElmentData, insertEdge: HorizontalInsertEdge) {
+  private _showHorizIndicator(target: SwdZoneElmentData, insertEdge: HorizontalInsertEdge) {
     const offsetMap: OffsetMap = parseOffsetString(target.elementRef.dataset.swdOffset ?? "");
     const offset: Offset = {x: 10, y: 10};
     this._dropIndicator.style.height = `${target.height-offset.y}px`;
@@ -47,7 +47,7 @@ class DropIndicatorUtility {
 
 
   /** Show indicator horizontally at top or bottom */
-  private _showHorizIndicator(target: SwdZoneElmentData, insertEdge: VerticalInsertEdge) {
+  private _showVertIndicator(target: SwdZoneElmentData, insertEdge: VerticalInsertEdge) {
     const offsetMap = parseOffsetString(target.elementRef.dataset.swdOffset ?? "");
     const offset: Offset = {x: 10, y: 10};
     this._dropIndicator.style.width = `${target.width-offset.x}px`;
@@ -93,8 +93,8 @@ class DropIndicatorUtility {
     if( dropZone.hasAttribute("data-swd-mode") 
       && dropZone.dataset.swdMode == "area") return "area";
     if(dropZone.hasAttribute("data-swd-position") 
-      && dropZone.dataset.swdPosition == "horizontal") return "horizontal";
-    return "vertical";
+      && dropZone.dataset.swdPosition == "vertical") return "vertical";
+    return "horizontal";
   }
 
   private _getFirstVisibleDropArea(target: SwdZoneElmentData, areas: Area[]) : Area|null {
@@ -180,10 +180,10 @@ class DropIndicatorUtility {
     const {width, height} = target;
     switch (mode) {
       case "horizontal": {
-        return (my < height/2) ? ['vt', 'vb'] : ['vb', 'vt'];
+        return (mx < width/2) ? ['hl', 'hr'] : ['hr', 'hl'];
       }
       case "vertical": {
-        return (mx < width/2) ? ['hl', 'hr'] : ['hr', 'hl'];
+        return (my < height/2) ? ['vt', 'vb'] : ['vb', 'vt'];
       }
       case "area": {
         return this._getNearestRegions(event);

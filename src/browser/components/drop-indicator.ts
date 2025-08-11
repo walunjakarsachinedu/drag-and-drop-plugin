@@ -25,15 +25,6 @@ class DropIndicator {
     }
   }
 
-  getDropIndicatorMode(dropZone: HTMLElement) : DropIndicatorMode {
-    if( dropZone.hasAttribute("data-swd-mode") 
-      && dropZone.dataset.swdMode == "area") return "area";
-    if(dropZone.hasAttribute("data-swd-position") 
-      && dropZone.dataset.swdPosition == "horizontal") return "horizontal";
-    return "vertical";
-  }
-
-
   private _showElementAndEnableAnimation() {
     const styles = window.getComputedStyle(this._dropIndicator);
     if(styles.display != 'none') return;
