@@ -105,10 +105,10 @@ class DropIndicatorUtility {
     const cache: Record<number, Record<number, boolean>> = {};
 
     // TODO: for insert mode, add new function that check is given point present on element.
-    const isParentOrInside = ({x, y}: Point) => {
+    const isParentOrInside = ({x, y}: Point, dropZoneElement: Element) => {
       if(cache[x]?.[y]) return cache[x][y];
       const el: Element|null = document.elementFromPoint(x, y);
-      const isFeasible = !!el && (el === parent || parent.contains(el));
+      const isFeasible = this.isPointVisibleInSwdContainers(x, y, dropZoneElement);;
       cache[x] ??= {};
       cache[x][y] = isFeasible;
       return cache[x][y];
@@ -116,7 +116,7 @@ class DropIndicatorUtility {
 
 
     const dropArea = areas.find(area => {
-      return this._getCornerPoints(target, area).every((point) => isParentOrInside(point));
+      return this._getCornerPoints(target, area).every((point) => isParentOrInside(point, target.elementRef));
     }) ?? null;
 
     return dropArea;
@@ -301,7 +301,47 @@ class DropIndicatorUtility {
 
     return areaMap;
   }
+
+
+  /** Check if a point is visible within data-swd-space containers only  */
+  isPointVisibleInSwdContainers(x: number, y: number, targetElement: Element) {
+    const swdContainers = this.findSwdScrollContainers(targetElement);
+    
+    // If no data-swd-space containers found, point is visible (viewport only)
+    if (swdContainers.length === 0) {
+      return x >= 0 && x <= window.innerWidth && y >= 0 && y <= window.innerHeight;
+    }
+    
+    // Check visibility within each data-swd-space container
+    for (const container of swdContainers) {
+      const containerRect = container.getBoundingClientRect();
+      
+      if (x < containerRect.left || 
+          x > containerRect.right || 
+          y < containerRect.top || 
+          y > containerRect.bottom) {
+        return false;
+      }
+    }
   
+  return true;
+}
+
+ 
+  /** Find all scroll containers with data-swd-space attribute  */
+  findSwdScrollContainers(element: Element) {
+    const swdContainers = [];
+    let parent = element.parentElement;
+    
+    while (parent && parent !== document.documentElement) {
+      if (parent.hasAttribute('data-swd-space')) {
+        swdContainers.push(parent);
+      }
+      parent = parent.parentElement;
+    }
+    
+    return swdContainers;
+  }
 }
 
 export { DropIndicatorUtility };
