@@ -108,7 +108,7 @@ class DropIndicatorUtility {
     const isParentOrInside = ({x, y}: Point, dropZoneElement: Element) => {
       if(cache[x]?.[y]) return cache[x][y];
       const el: Element|null = document.elementFromPoint(x, y);
-      const isFeasible = this.isPointVisibleInSwdContainers(x, y, dropZoneElement);;
+      const isFeasible = this._isPointVisibleInSwdContainers(x, y, dropZoneElement);;
       cache[x] ??= {};
       cache[x][y] = isFeasible;
       return cache[x][y];
@@ -304,24 +304,22 @@ class DropIndicatorUtility {
 
 
   /** Check if a point is visible within data-swd-space containers only  */
-  isPointVisibleInSwdContainers(x: number, y: number, targetElement: Element) {
-    const swdContainers = this.findSwdScrollContainers(targetElement);
+  private _isPointVisibleInSwdContainers(x: number, y: number, targetElement: Element) {
+    const swdContainer = this._firstSwdScrollContainers(targetElement);
     
     // If no data-swd-space containers found, point is visible (viewport only)
-    if (swdContainers.length === 0) {
+    if (swdContainer == null) {
       return x >= 0 && x <= window.innerWidth && y >= 0 && y <= window.innerHeight;
     }
     
     // Check visibility within each data-swd-space container
-    for (const container of swdContainers) {
-      const containerRect = container.getBoundingClientRect();
-      
-      if (x < containerRect.left || 
-          x > containerRect.right || 
-          y < containerRect.top || 
-          y > containerRect.bottom) {
-        return false;
-      }
+    const containerRect = swdContainer.getBoundingClientRect();
+    
+    if (x < containerRect.left || 
+        x > containerRect.right || 
+        y < containerRect.top || 
+        y > containerRect.bottom) {
+      return false;
     }
   
   return true;
@@ -329,18 +327,16 @@ class DropIndicatorUtility {
 
  
   /** Find all scroll containers with data-swd-space attribute  */
-  findSwdScrollContainers(element: Element) {
-    const swdContainers = [];
+  private _firstSwdScrollContainers(element: Element): HTMLElement|null {
     let parent = element.parentElement;
     
     while (parent && parent !== document.documentElement) {
       if (parent.hasAttribute('data-swd-space')) {
-        swdContainers.push(parent);
+        return parent;
       }
       parent = parent.parentElement;
     }
-    
-    return swdContainers;
+    return null;
   }
 }
 
