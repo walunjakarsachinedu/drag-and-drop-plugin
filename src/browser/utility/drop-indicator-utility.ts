@@ -107,13 +107,11 @@ class DropIndicatorUtility {
     // TODO: for insert mode, add new function that check is given point present on element.
     const isParentOrInside = ({x, y}: Point, dropZoneElement: Element) => {
       if(cache[x]?.[y]) return cache[x][y];
-      const el: Element|null = document.elementFromPoint(x, y);
       const isFeasible = this._isPointVisibleInSwdContainers(x, y, dropZoneElement);;
       cache[x] ??= {};
       cache[x][y] = isFeasible;
       return cache[x][y];
     }
-
 
     const dropArea = areas.find(area => {
       return this._getCornerPoints(target, area).every((point) => isParentOrInside(point, target.elementRef));
