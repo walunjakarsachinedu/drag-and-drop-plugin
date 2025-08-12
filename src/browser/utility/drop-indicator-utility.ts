@@ -157,7 +157,7 @@ class DropIndicatorUtility {
     }
 
     if(area == 'at') {
-      return [{x, y}, {x, y: yh}, {x: xw23, y: yh3}, {x: xw3, y: yh3}];
+      return [{x, y}, {x: xw, y}, {x: xw23, y: yh3}, {x: xw3, y: yh3}];
     }
 
     if(area == 'ab') {
