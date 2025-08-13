@@ -144,24 +144,23 @@ class DropIndicatorUtility {
     if(area == 'vt') return [{x: x, y: y-offset.top}, {x: x+w, y: y-offset.top}];
     if(area == 'vb') return [{x: x, y: y+h+offset.bottom}, {x: x+w, y: y+h+offset.bottom}];
 
-    const xw3 = x + w / 3, yh3 = y + h / 3;
-    const xw23 = x + (2 * w) / 3, yh23 = y + (2 * h) / 3;
     const xw = x+w, yh = y+h;
+    const xw2 = x+w/2, yh2 = y+h/2;
 
     if(area == 'al') {
-      return [{x, y}, {x: xw3, y: yh3}, {x: xw3, y: yh23}, {x, y: yh}];
+      return [{x, y}, {x: xw2, y: y}, {x: xw2, y: yh}, {x, y: yh}];
     }
 
     if(area == 'ar') {
-      return [{x: xw23, y: yh3}, {x: xw, y}, {x: xw, y: yh}, {x: xw23, y: yh23}];
+      return [{x: xw2, y}, {x: xw, y: y}, {x: xw, y: yh}, {x, y: yh2}];
     }
 
     if(area == 'at') {
-      return [{x, y}, {x: xw, y}, {x: xw23, y: yh3}, {x: xw3, y: yh3}];
+      return [{x, y}, {x: xw, y}, {x: xw, y: yh2}, {x: x, y: yh2}];
     }
 
     if(area == 'ab') {
-      return [{x: xw3, y: yh23}, {x: xw23, y: yh23}, {x: xw, y: yh}, {x, y: yh}];
+      return [{x, y: yh2}, {x: xw, y: yh2}, {x: xw, y: yh}, {x, y: yh}];
     }
     
     if(area == 'ac') {
