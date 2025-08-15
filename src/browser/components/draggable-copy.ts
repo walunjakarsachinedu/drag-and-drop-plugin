@@ -1,16 +1,17 @@
-import { SwdEvent } from "../../types/types";
+import { DragElementGetter, SwdEvent } from "../../types/types";
 import { clearTextSelection } from "../../util/utils";
 
-class DraggableCopy {
-  draggableCopy: HTMLElement|null|undefined;
+class DraggableCopy implements DragElementGetter {
+  private draggableCopy: HTMLElement|null = null;
+  private draggable: HTMLElement|null = null;
 
   /**
    * Creates a copy of the target element and adds it to the DOM.
    * @param event - The mouse event.
    */
-  addElemCopyToDom(element: HTMLElement|null|undefined) {
-    this.draggableCopy = element?.cloneNode(true) as HTMLElement|null|undefined;
-    if(!this.draggableCopy) return;
+  addElemCopyToDom(element: HTMLElement) {
+    this.draggable = element;
+    this.draggableCopy = element.cloneNode(true) as HTMLElement;
     delete this.draggableCopy.dataset.swdZones;
     this.draggableCopy.classList.add("draggable-element");
     this.draggableCopy.style.display = 'none';
@@ -33,6 +34,9 @@ class DraggableCopy {
     this.draggableCopy.style.pointerEvents = 'none';
   }
 
+  getDraggedElement(): HTMLElement|null {
+    return this.draggable;
+  }
 
   /**
    * Removes the draggable copy from the DOM.
@@ -42,6 +46,7 @@ class DraggableCopy {
 
     document.body.removeChild(this.draggableCopy);
     this.draggableCopy = null;
+    this.draggable = null;
   }
 }
 

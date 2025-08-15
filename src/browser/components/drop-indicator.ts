@@ -1,10 +1,11 @@
-import { DropEvent } from "../../types/types";
+import { DragElementGetter, DropEvent, DropEventDetail, DropTarget } from "../../types/types";
 import { dropUtility } from "../utility/drop-indicator-utility";
 
 class DropIndicator {
   private _dropIndicator: HTMLElement = document.createElement("div");
+  private _dragTarget: DropTarget|null = null;
 
-  constructor() {
+  constructor(private dragUtils: DragElementGetter) {
     this.hideDropIndicator();
     this._dropIndicator.style.pointerEvents = 'none';
     this._dropIndicator.classList.add('drop-indicator');
@@ -16,6 +17,7 @@ class DropIndicator {
       this.hideDropIndicator();
       return;
     }
+    this._dragTarget = {target: event.target, area: event.placement};
     this._showElementAndEnableAnimation();
     dropUtility.placeIndicatorAtArea(event.target, event.placement, this._dropIndicator);
   }
@@ -36,8 +38,22 @@ class DropIndicator {
     });
   }
 
+  emitDropEvent() {
+    if(!this._dragTarget) return;
+    const dropTarget = this._dragTarget.target.elementRef;
+    const dropPos = this._dragTarget.area;
+    const draggedElement = this.dragUtils.getDraggedElement();
+    if(!draggedElement) return;
+    const event = new CustomEvent<DropEventDetail>('swd-drop', {
+      detail: { target: draggedElement, dropPos },
+      bubbles: true,
+      cancelable: true
+    });
+    dropTarget.dispatchEvent(event);
+  }
   
   hideDropIndicator() {
+    this._dragTarget = null;
     this._dropIndicator.style.display = "none";
   }
 }

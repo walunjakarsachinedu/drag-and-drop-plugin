@@ -1,5 +1,5 @@
 import { SwdMouse } from "../browser/utility/swd-mouse";
-import { Point, SwdEvent } from "../types/types";
+import { DraggableWithGetter, Point, SwdEvent } from "../types/types";
 
 function clearTextSelection() {
   const selection = window.getSelection();
@@ -105,6 +105,9 @@ function isInDropZoneOrSpace(event: SwdEvent) {
   return false;
 }
 
+function isDraggableWithGetter(element: HTMLElement): element is DraggableWithGetter<unknown> {
+  return typeof (element as any).getDragData === "function";
+}
 
 
 export {
@@ -116,5 +119,6 @@ export {
   isPointInRectangle,
   getSectionOfPoint,
   parseOffsetString,
-  isInDropZoneOrSpace
+  isInDropZoneOrSpace,
+  isDraggableWithGetter
 };

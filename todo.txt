@@ -1,4 +1,0 @@
-TODO:
-  - Improve core logic for positioning the drop indicator:
-    - Drop zone should show the indicator on its closest visible part.
-    - On hover, drop space should emit the closest drop zone element where the indicator can be shown visibly.

@@ -139,7 +139,6 @@ class DropIndicatorUtility {
     // optimization to reduce call to elementFromPoint
     const cache: Record<number, Record<number, boolean>> = {};
 
-    // TODO: for insert mode, add new function that check is given point present on element.
     const isParentOrInside = ({x, y}: Point, dropZoneElement: Element) => {
       if(cache[x]?.[y]) return cache[x][y];
       const isFeasible = this._isPointVisibleInSwdContainers(x, y, dropZoneElement);;

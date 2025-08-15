@@ -22,20 +22,18 @@ A flexible drag-and-drop plugin using declarative HTML attributes. Supports both
 
 #### Drop Event
 
-On successful drop, a `CustomEvent` named `swd-drop` is dispatched:
+On a successful drop, a CustomEvent named swd-drop is dispatched. The event contains draggedElement as `target` and `dropPos`.<br>
+Possible values of `dropPos`: `"vt" | "vb" | "hl" | "hr" | "al" | "ar" | "at" | "ab" | "ac"`.
 
 ```ts
-const dropEvent = new CustomEvent('swd-drop', {
-  detail: {
-    data: {
-      swdDataTransfer: valueOfAttribute["data-swd-data-transfer"],
-      target: target
-    },
-    target: target
-  }
+const event = new CustomEvent<DropEventDetail>('swd-drop', {
+  detail: { target: draggedElement, dropPos },
+  bubbles: true,
+  cancelable: true
 });
-target.dispatchEvent(dropEvent);
+dropTarget.dispatchEvent(event);
 ```
+> Note: For safe data transfer from a draggable to a drop target, add a getDragData function to the draggable element using the DraggableWithGetter type. On the drop target, use isDraggableWithGetter to check event.detail.target before casting it to DraggableWithGetter.
 <br>
 
 ---

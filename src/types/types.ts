@@ -46,6 +46,11 @@ type TargetAndMouseData = {
 
 type DropTarget = {target: SwdZoneElmentData, area: Area};
 
+type DropEventDetail = {
+  target: HTMLElement;
+  dropPos: Area;
+}
+
 
 type DropIndicatorMode = 'vertical' | 'horizontal' | 'area';
 
@@ -69,6 +74,19 @@ type DropEvent = SwdEvent & {
   placement?: Area;
 };
 
+interface DraggableWithGetter<T> extends HTMLElement {
+  getDragData: () => T;
+}
+
+declare global {
+  interface HTMLElementEventMap {
+    'swd-drop': CustomEvent<DropEventDetail>;
+  }
+}
+
+interface DragElementGetter { 
+  getDraggedElement(): HTMLElement | null; 
+}
 
 export {
   AreaMap,
@@ -83,10 +101,13 @@ export {
   TargetAndMouseData,
   DropTarget,
   DropEvent,
+  DropEventDetail,
   VerticalInsertEdge,
   HorizontalInsertEdge,
   InsertEdge, 
   ReplaceRegion,
-  Area
+  Area,
+  DraggableWithGetter,
+  DragElementGetter
 };
 
