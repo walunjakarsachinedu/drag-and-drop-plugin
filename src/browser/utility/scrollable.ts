@@ -59,6 +59,10 @@ class Scrollable {
     this._stopScrollInAllDirection();
   }
 
+  isScrolling() : boolean {
+    return !!(this.scrollFrameIds.left || this.scrollFrameIds.right || this.scrollFrameIds.top || this.scrollFrameIds.bottom);
+  }
+
 
   private _searchScrollableAndScroll(event: SwdEventWithTarget) {
     const target = event.target.elementRef;

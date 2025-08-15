@@ -19,10 +19,18 @@ const dropIndicator = new DropIndicator();
 const scrollable = new Scrollable();
 
 droppableSpace.onHovering((event) => {
+  if(scrollable.isScrolling()) {
+    dropIndicator.hideDropIndicator();
+    return;
+  }
   dropIndicator.showDropIndicator(event);
 });
 
 droppableZone.onHovering((event) => {
+  if(scrollable.isScrolling()) {
+    dropIndicator.hideDropIndicator();
+    return;
+  }
   dropIndicator.showDropIndicator(event);
 });
 
