@@ -118,12 +118,14 @@ class Scrollable {
     if(elementRef.scrollWidth > elementRef.clientWidth) {
       const dl = mouseX - leftEdge;
       const dr = rightEdge - mouseX;
-      if (dl < distance && dl > 0) {
+      const canScrollLeft = elementRef.scrollLeft > 0;
+      const canScrollRight = elementRef.scrollLeft < elementRef.scrollWidth - elementRef.clientWidth;
+      if (dl < distance && dl > 0 && canScrollLeft) {
         scrollData.push({
           direction: "left",
           distanceFromEdge: dl,
         });
-      } else if (dr < distance && dr > 0) {
+      } else if (dr < distance && dr > 0 && canScrollRight) {
         scrollData.push({
           direction: "right",
           distanceFromEdge: dr,
@@ -134,12 +136,14 @@ class Scrollable {
     if(elementRef.scrollHeight > elementRef.clientHeight) {
       const dt = mouseY - topEdge;
       const db = bottomEdge - mouseY;
-      if (dt  < distance && dt > 0) {
+      const canScrollTop = elementRef.scrollTop > 0;
+      const canScrollBottom = elementRef.scrollTop < elementRef.scrollHeight - elementRef.clientHeight;
+      if (dt  < distance && dt > 0 && canScrollTop) {
         scrollData.push({
           direction: "top",
           distanceFromEdge: dt,
         });
-      } else if (db < distance && db > 0) {
+      } else if (db < distance && db > 0 && canScrollBottom) {
         scrollData.push({
           direction: "bottom",
           distanceFromEdge: db,
