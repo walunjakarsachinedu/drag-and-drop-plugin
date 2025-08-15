@@ -38,7 +38,7 @@ droppableZone.onHovering((event) => {
 draggableZone.onDragStart((event) => {
   setGlobalCursorStyleToMove();
   draggableCopy.addElemCopyToDom(event.target.elementRef);
-  droppableZone.listenToDroppableZone(SwdMouse.extractSwdTargets(event));
+  droppableZone.listenToDropZones(SwdMouse.extractSwdTargets(event));
   droppableSpace.listenToDropZones(SwdMouse.extractSwdTargets(event));
   scrollable.enableAutoScroll();
 });

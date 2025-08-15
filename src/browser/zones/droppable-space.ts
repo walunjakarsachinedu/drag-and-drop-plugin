@@ -1,7 +1,7 @@
 import { DropTarget, MouseData, DropEvent, SwdEventWithTarget } from "../../types/types";
 import { EventEmitter, EventHandler } from "../../util/event-emitter";
 import { dropUtility } from "../utility/drop-indicator-utility";
-import { SwdMouse } from "../utility/swd-mouse";
+import { SwdMouse, SwdSubscription } from "../utility/swd-mouse";
 
 
 /**  
@@ -12,16 +12,15 @@ import { SwdMouse } from "../utility/swd-mouse";
 class DroppableSpace {
   private e_hovering: EventEmitter<DropEvent> = new EventEmitter<DropEvent>();
   private swdTargets: String[] = [];
+  private swdMouseSubscription: SwdSubscription|null = null;
 
-  constructor() {
-    SwdMouse.addEventListenerWithTarget('mousemove', this._hoveringEventEmitter.bind(this));
-  }
   
   /** 
    * extract swd-targets from `event` & setup hovering listener based on value of swd-targets.
   */
   listenToDropZones(dropZone: string|undefined) {
     if(!dropZone) return;
+    this.swdMouseSubscription = SwdMouse.addEventListenerWithTarget('mousemove', this._hoveringEventEmitter.bind(this));
     this.swdTargets = dropZone.split(' ');
   }
 
@@ -69,6 +68,10 @@ class DroppableSpace {
 
 
   cleanListener() {
+    if(this.swdMouseSubscription) {
+      SwdMouse.clearEventListener("mousemove", this.swdMouseSubscription);
+      this.swdMouseSubscription = null;
+    }
     this.swdTargets = [];
   }
 
