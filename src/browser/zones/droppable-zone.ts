@@ -1,14 +1,15 @@
-import { SwdEvent, SwdEventWithTarget } from "../../types/types";
+import { DropEvent, SwdEventWithTarget } from "../../types/types";
 import { EventEmitter, EventHandler } from "../../util/event-emitter";
 import { hasCommonElement } from "../../util/utils";
+import { dropUtility } from "../utility/drop-indicator-utility";
 import { SwdMouse } from "../utility/swd-mouse";
 
 /**  
  * Emit event for element with `data-swd-targets` attribute.
 */
 class DroppableZone {
-  private e_hovering: EventEmitter<SwdEventWithTarget> = new EventEmitter<SwdEventWithTarget>();
-  private swdTargets: String[] = [];
+  private e_hovering: EventEmitter<DropEvent> = new EventEmitter<DropEvent>();
+  private swdTargets: String[]|null = null;
 
   constructor() {
     SwdMouse.addEventListenerWithTarget('mousemove', this._hoveringEventEmitter.bind(this));
@@ -26,21 +27,40 @@ class DroppableZone {
    * emits event when hovering droppable zone.
   */
   private _hoveringEventEmitter(event: SwdEventWithTarget) {
+    if(!this.swdTargets) return;
     const target = event.target.elementRef.closest('[data-swd-zones]') as HTMLElement|null;
     if(!target) return;
     event = SwdMouse.updateTargetOfSwdEvent(event, target);
     const swdZones = SwdMouse.extractSwdZones(event)?.split(' ') ?? [];
     const isZoneDroppable = target && hasCommonElement(this.swdTargets, swdZones);
-    if(!isZoneDroppable) return;
+    if(!isZoneDroppable) {
+      this.behaveLikeDropSpace(event, this.swdTargets);
+      return;
+    }
 
-    this.e_hovering.emit(event);
+    const area = dropUtility.getDropPosition(event);
+    if(area) {
+      this.e_hovering.emit({...event, placement: area});
+    }
+    else {
+      this.behaveLikeDropSpace(event, this.swdTargets);
+    }
+  }
+
+  behaveLikeDropSpace(event: SwdEventWithTarget, swdTargets: String[]) {
+    const dropSpace = dropUtility.getDropSpace(event.target.elementRef);
+    if(!dropSpace) return;
+    event = SwdMouse.updateTargetOfSwdEvent(event, dropSpace);
+    const zones = dropUtility.getClosestDropZones(event, swdTargets)
+    const dropTarget = dropUtility.getClosestVisibleDropZone(zones, event.mouseData);
+    this.e_hovering.emit(dropUtility.toDropEvent(event, dropTarget));
   }
 
   cleanListener() {
-    this.swdTargets = [];
+    this.swdTargets = null;
   }
 
-  onHovering(handler: EventHandler<SwdEventWithTarget>) {
+  onHovering(handler: EventHandler<DropEvent>) {
     this.e_hovering.addListener(handler);
   }
 }

@@ -38,6 +38,14 @@ type SwdEventWithTarget = SwdEvent & {
   target: SwdZoneElmentData; 
 };
 
+type TargetAndMouseData = {
+  target: SwdZoneElmentData;
+  mouseData: MouseData;
+}
+
+
+type DropTarget = {target: SwdZoneElmentData, area: Area};
+
 
 type DropIndicatorMode = 'vertical' | 'horizontal' | 'area';
 
@@ -56,9 +64,9 @@ type AreaMap = {
   [key in ReplaceRegion]: number[];
 };
 
-type DropEvent = SwdEventWithTarget & {
+type DropEvent = SwdEvent & {
   /** possible position for placement of drop indicator such that after placing it, the indicator remain in bound. */
-  placement: Area;
+  placement?: Area;
 };
 
 
@@ -72,6 +80,8 @@ export {
   SwdEvent,
   SwdEventWithTarget,
   SwdZoneElmentData,
+  TargetAndMouseData,
+  DropTarget,
   DropEvent,
   VerticalInsertEdge,
   HorizontalInsertEdge,

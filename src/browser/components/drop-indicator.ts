@@ -1,10 +1,8 @@
-import { DropIndicatorMode, SwdEventWithTarget } from "../../types/types";
-import { DropIndicatorUtility } from "../utility/drop-indicator-utility";
+import { DropEvent } from "../../types/types";
+import { dropUtility } from "../utility/drop-indicator-utility";
 
 class DropIndicator {
   private _dropIndicator: HTMLElement = document.createElement("div");
-  private _dropUtility = new DropIndicatorUtility(this._dropIndicator);
-
 
   constructor() {
     this.hideDropIndicator();
@@ -13,16 +11,13 @@ class DropIndicator {
     document.body.appendChild(this._dropIndicator);
   }
   
-
-  showDropIndicator(event: SwdEventWithTarget) {
-    const target = event.target;
-    if(!target) return;
-
-    this._showElementAndEnableAnimation();
-    const pos = this._dropUtility.getDropPosition(event);
-    if(pos) {
-      this._dropUtility.placeIndicatorAtArea(target, pos);
+  showDropIndicator(event: DropEvent) {
+    if(!event.target || !event.placement) {
+      this.hideDropIndicator();
+      return;
     }
+    this._showElementAndEnableAnimation();
+    dropUtility.placeIndicatorAtArea(event.target, event.placement, this._dropIndicator);
   }
 
   private _showElementAndEnableAnimation() {

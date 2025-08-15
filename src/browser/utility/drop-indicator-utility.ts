@@ -1,5 +1,5 @@
-import { Area, AreaMap, DropIndicatorMode, HorizontalInsertEdge, Offset, OffsetMap, Point, ReplaceRegion, SwdEventWithTarget, SwdZoneElmentData, VerticalInsertEdge } from "../../types/types";
-import { getSectionOfPoint, isPointInRectangle, parseOffsetString } from "../../util/utils";
+import { Area, AreaMap, DropEvent, DropIndicatorMode, DropTarget, HorizontalInsertEdge, MouseData, Offset, OffsetMap, Point, ReplaceRegion, SwdEventWithTarget, SwdZoneElmentData, TargetAndMouseData, VerticalInsertEdge } from "../../types/types";
+import { getSectionOfPoint, hasCommonElement, isPointInRectangle, parseOffsetString } from "../../util/utils";
 import { SwdMouse } from "./swd-mouse";
 
 
@@ -9,60 +9,95 @@ Note: The drop logic in area mode heavily depends on the diagram located in the 
 - area-mode-gesture
 */
 class DropIndicatorUtility {
-  constructor(private _dropIndicator: HTMLElement) { }
-
-  getDropPosition(event: SwdEventWithTarget): Area|null {
+  getDropPosition(event: TargetAndMouseData): Area|null {
     const mode = this._getDropMode(event.target.elementRef);
     const areas = this._getClosestAreas(event, mode);
     const dropArea = this._getFirstVisibleDropArea(event.target, areas);
     return dropArea;
   }
 
-  placeIndicatorAtArea(target: SwdZoneElmentData, area: Area) {
+  placeIndicatorAtArea(target: SwdZoneElmentData, area: Area, _dropIndicator: HTMLElement) {
     if(area == "hl" || area == "hr") {
-      this._showHorizIndicator(target, area);
+      this._showHorizIndicator(target, area, _dropIndicator);
     }
     if(area == "vt" || area == "vb") {
-      this._showVertIndicator(target, area);
+      this._showVertIndicator(target, area, _dropIndicator);
     }
     if(area == 'al' || area == 'ar' || area == 'at' || area == 'ab' || area == 'ac') {
-      this._showAreaIndicator(target, area);
+      this._showAreaIndicator(target, area, _dropIndicator);
     }
   }
 
+  /** Return closes ancestor drop space. */
+  getDropSpace(target: HTMLElement) : HTMLElement | null {
+    const dropSpace = target.closest("[data-swd-space]");
+    return (dropSpace instanceof HTMLElement) ? dropSpace : null;
+  }
+
+  /** Return closest drop zone with visible drop targets */
+  getClosestVisibleDropZone(dropZones: HTMLElement[], mouseData: MouseData): DropTarget | null {
+    let area: Area|null = null;
+    const target = dropZones.find(dropZone => {
+      area = this.getDropPosition({ target: SwdMouse.getElementData(dropZone), mouseData });
+      return area;
+    });
+
+    if(!target || !area) return null;
+
+    return { target: SwdMouse.getElementData(target), area };
+  }
+ 
+  /** Returns drop zones in ascending order of their closeness to the mouse. */
+  getClosestDropZones(event: SwdEventWithTarget, swdTargets: String[]): HTMLElement[] {
+    const target = event.target.elementRef;
+    const children = Array.from(target.querySelectorAll('[data-swd-zones]')).filter((child: Element) => {
+      const swdZones = (child as HTMLElement).dataset.swdZones?.split(' ') ?? [];
+      return hasCommonElement(swdTargets, swdZones);
+    }) as HTMLElement[];
+
+    return children.sort((a, b) => {
+      return this._distanceFromMouse(a, event.mouseData)-this._distanceFromMouse(b, event.mouseData);
+    })
+  }
+
+
+  toDropEvent(event: SwdEventWithTarget, dropTarget: DropTarget|null) : DropEvent {
+    return { ...event, target: dropTarget?.target, placement: dropTarget?.area };
+  }
+
   /** Show indicator vertically at left or right. */
-  private _showHorizIndicator(target: SwdZoneElmentData, insertEdge: HorizontalInsertEdge) {
+  private _showHorizIndicator(target: SwdZoneElmentData, insertEdge: HorizontalInsertEdge, _dropIndicator: HTMLElement) {
     const offsetMap: OffsetMap = parseOffsetString(target.elementRef.dataset.swdOffset ?? "");
     const offset: Offset = {x: 10, y: 10};
-    this._dropIndicator.style.height = `${target.height-offset.y}px`;
-    this._dropIndicator.style.width = `0px`;
+    _dropIndicator.style.height = `${target.height-offset.y}px`;
+    _dropIndicator.style.width = `0px`;
 
     const dropIndicatorX = (insertEdge == 'hl') 
       ? (target.x - (offsetMap["left"] ?? offset.x)) // placing at left side
       : (target.x + target.width + (offsetMap["right"] ?? offset.x)); // placing at right side
 
-    this._dropIndicator.style.top = `${target.y+offset.y/2}px`;
-    this._dropIndicator.style.left = `${dropIndicatorX}px`;
+    _dropIndicator.style.top = `${target.y+offset.y/2}px`;
+    _dropIndicator.style.left = `${dropIndicatorX}px`;
   }
 
 
   /** Show indicator horizontally at top or bottom */
-  private _showVertIndicator(target: SwdZoneElmentData, insertEdge: VerticalInsertEdge) {
+  private _showVertIndicator(target: SwdZoneElmentData, insertEdge: VerticalInsertEdge, _dropIndicator: HTMLElement) {
     const offsetMap = parseOffsetString(target.elementRef.dataset.swdOffset ?? "");
     const offset: Offset = {x: 10, y: 10};
-    this._dropIndicator.style.width = `${target.width-offset.x}px`;
-    this._dropIndicator.style.height = `0px`;
+    _dropIndicator.style.width = `${target.width-offset.x}px`;
+    _dropIndicator.style.height = `0px`;
 
     const dropIndicatorY = (insertEdge == 'vt') 
       ? (target.y - (offsetMap["top"] ?? offset.y))  // placing at top side
       : (target.y + target.height + (offsetMap["bottom"] ?? offset.y));  // placing at bottom side
 
-    this._dropIndicator.style.top = `${dropIndicatorY}px`;
-    this._dropIndicator.style.left = `${target.x+offset.x/2}px`;
+    _dropIndicator.style.top = `${dropIndicatorY}px`;
+    _dropIndicator.style.left = `${target.x+offset.x/2}px`;
   }
 
 
-  private _showAreaIndicator(target: SwdZoneElmentData, region: ReplaceRegion) {
+  private _showAreaIndicator(target: SwdZoneElmentData, region: ReplaceRegion, _dropIndicator: HTMLElement) {
     let startPoint: Point = target;
     let indicatorWidth: number = target.width; 
     let indicatorHeight: number = target.height;
@@ -82,11 +117,11 @@ class DropIndicatorUtility {
       indicatorWidth = target.width/2; 
     }
 
-    this._dropIndicator.style.top = `${startPoint.y}px`;
-    this._dropIndicator.style.left = `${startPoint.x}px`;
+    _dropIndicator.style.top = `${startPoint.y}px`;
+    _dropIndicator.style.left = `${startPoint.x}px`;
 
-    this._dropIndicator.style.width = `${indicatorWidth-1}px`;
-    this._dropIndicator.style.height = `${indicatorHeight-1}px`;
+    _dropIndicator.style.width = `${indicatorWidth-1}px`;
+    _dropIndicator.style.height = `${indicatorHeight-1}px`;
   }
 
   private _getDropMode(dropZone: HTMLElement) : DropIndicatorMode {
@@ -171,7 +206,7 @@ class DropIndicatorUtility {
   }
 
 
-  private _getClosestAreas(event: SwdEventWithTarget, mode: DropIndicatorMode) : Area[] {
+  private _getClosestAreas(event: TargetAndMouseData, mode: DropIndicatorMode) : Area[] {
     const {target, mouseData} = event;
     const {x: mx, y: my} = SwdMouse.getMouseOffset(target.elementRef, mouseData);
     const {width, height} = target;
@@ -189,7 +224,7 @@ class DropIndicatorUtility {
   }
 
   /** Returns regions sorted by closeness to the mouse. */
-  private _getNearestRegions(event: SwdEventWithTarget): ReplaceRegion[] {
+  private _getNearestRegions(event: TargetAndMouseData): ReplaceRegion[] {
     const areaNumber = this._getAreaNumber(event);
     const areaMap = this._prepareAreaMap(event);
     const hoveredRegion = this._getHoveredRegion(areaMap, areaNumber);
@@ -245,7 +280,7 @@ class DropIndicatorUtility {
 
 
   /** Return area number of area in which mouse is present. */
-  private _getAreaNumber({target, mouseData}: SwdEventWithTarget) : number {
+  private _getAreaNumber({target, mouseData}: TargetAndMouseData) : number {
     if(isPointInRectangle({
       topLeftPoint: {
         x: target.x + target.width/3, 
@@ -267,7 +302,7 @@ class DropIndicatorUtility {
   }
 
   /** Preparing map for drop area within drop element. Affects gestures. */
-  private _prepareAreaMap({target}: SwdEventWithTarget) : AreaMap {
+  private _prepareAreaMap({target}: TargetAndMouseData) : AreaMap {
     const areas: string[] = (target.dataset.swdArea?.split(' ') ?? []).map(v => v.toLowerCase());
     const areaMap: AreaMap = {at: [6,7], ar: [1,8], ab: [2,3], al: [4,5], ac: [9]};
     
@@ -335,6 +370,21 @@ class DropIndicatorUtility {
     }
     return null;
   }
+
+  /** Calculates distance of mouse from center of element.  */
+  private _distanceFromMouse(element: HTMLElement, mouseData: MouseData): number {
+    const rect = element.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const distance = Math.sqrt(Math.pow(centerX - mouseData.x, 2) + Math.pow(centerY - mouseData.y, 2));
+
+    return distance;
+  };
+
 }
 
-export { DropIndicatorUtility };
+
+const dropUtility = new DropIndicatorUtility();
+
+export { dropUtility };
