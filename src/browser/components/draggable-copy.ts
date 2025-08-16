@@ -29,6 +29,7 @@ class DraggableCopy implements DragElementGetter {
     this.draggableCopy.style.display = "";
     clearTextSelection();
     const width = this.draggableCopy.offsetWidth;
+    this.draggableCopy.style.position = "fixed";
     this.draggableCopy.style.left = `${event.mouseData.x-width/2}px`;
     this.draggableCopy.style.top = `${event.mouseData.y}px`;
     this.draggableCopy.style.pointerEvents = 'none';

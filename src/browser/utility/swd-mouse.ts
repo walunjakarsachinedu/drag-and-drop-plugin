@@ -1,6 +1,6 @@
 import { MouseData, Offset, SwdEvent, SwdEventWithTarget, SwdZoneElmentData } from "../../types/types";
 
-type SwdTouch = {target: HTMLElement, identifier: number|null, pageX: number, pageY: number};
+type SwdTouch = {target: HTMLElement, identifier: number|null, clientX: number, clientY: number};
 
 type SwdSubscription = {
   mouseListener: (ev: TouchEvent | MouseEvent) => any;
@@ -96,8 +96,8 @@ class SwdMouse {
 
   public static getElementData(element: HTMLElement): SwdZoneElmentData {
     const rect = element.getBoundingClientRect();
-    const x = rect.left + window.scrollX;
-    const y = rect.top + window.scrollY;
+    const x = rect.left;
+    const y = rect.top;
     const width = rect.width;
     const height = rect.height;
 
@@ -112,8 +112,8 @@ class SwdMouse {
   }
 
   public static getMouseData(event: MouseEvent|TouchEvent) : MouseData {
-    const mouseX = event instanceof MouseEvent ? event.pageX : SwdMouse.touchData?.pageX!;
-    const mouseY = event instanceof MouseEvent ? event.pageY : SwdMouse.touchData?.pageY!;
+    const mouseX = event instanceof MouseEvent ? event.clientX : SwdMouse.touchData?.clientX!;
+    const mouseY = event instanceof MouseEvent ? event.clientY : SwdMouse.touchData?.clientY!;
     const mouseData: MouseData = { x: mouseX, y: mouseY};
     return mouseData;
   }
@@ -151,8 +151,8 @@ class SwdMouse {
         SwdMouse.touchData = {
           target: touchEvent.changedTouches[0].target as HTMLElement, 
           identifier: touchEvent.changedTouches[0].identifier,
-          pageX: touchEvent.changedTouches[0].pageX,
-          pageY: touchEvent.changedTouches[0].pageY,
+          clientX: touchEvent.changedTouches[0].clientX,
+          clientY: touchEvent.changedTouches[0].clientY,
         };
         normalizedListener(touchEvent);
       }
@@ -167,8 +167,8 @@ class SwdMouse {
       const touch = this._getTouchEvent(touchEvent.changedTouches);
       if(touch) {
         SwdMouse.touchData!.target = document.elementFromPoint(touch.pageX, touch.pageY) as HTMLElement;
-        SwdMouse.touchData!.pageX = touch.pageX;
-        SwdMouse.touchData!.pageY = touch.pageY;
+        SwdMouse.touchData!.clientX = touch.pageX;
+        SwdMouse.touchData!.clientY = touch.pageY;
         // async with original object
         normalizedListener(touchEvent);
       }
