@@ -335,12 +335,12 @@ class DropIndicatorUtility {
 
   /** Check if a point is visible within data-swd-space containers only  */
   private _isPointVisibleInSwdContainers(x: number, y: number, targetElement: Element) {
+    const isOutOfBound = x < 0 || x > window.innerWidth || y < 0 || y > window.innerHeight
+    if(isOutOfBound) return false;
+
+    // If no data-swd-space containers found, check point is in bound
     const swdContainer = this._firstSwdScrollContainers(targetElement);
-    
-    // If no data-swd-space containers found, point is visible (viewport only)
-    if (swdContainer == null) {
-      return x >= 0 && x <= window.innerWidth && y >= 0 && y <= window.innerHeight;
-    }
+    if (swdContainer == null) return false;
     
     // Check visibility within each data-swd-space container
     const containerRect = swdContainer.getBoundingClientRect();
