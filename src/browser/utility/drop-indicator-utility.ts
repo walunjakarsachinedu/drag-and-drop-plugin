@@ -67,33 +67,32 @@ class DropIndicatorUtility {
 
   /** Show indicator vertically at left or right. */
   private _showHorizIndicator(target: SwdZoneElmentData, insertEdge: HorizontalInsertEdge, _dropIndicator: HTMLElement) {
-    const offsetMap: OffsetMap = parseOffsetString(target.elementRef.dataset.swdOffset ?? "");
-    const offset: Offset = {x: 10, y: 10};
-    _dropIndicator.style.height = `${target.height-offset.y}px`;
+    const offsetMap: Required<OffsetMap> = this._getSwdOffset(target.elementRef);
+
+    _dropIndicator.style.height = `${target.height-(offsetMap.top+offsetMap.bottom)}px`;
     _dropIndicator.style.width = `0px`;
 
     const dropIndicatorX = (insertEdge == 'hl') 
-      ? (target.x - (offsetMap["left"] ?? offset.x)) // placing at left side
-      : (target.x + target.width + (offsetMap["right"] ?? offset.x)); // placing at right side
+      ? (target.x - offsetMap.left) // placing at left side
+      : (target.x + target.width + offsetMap.right); // placing at right side
 
-    _dropIndicator.style.top = `${target.y+offset.y/2}px`;
+    _dropIndicator.style.top = `${target.y+offsetMap.top}px`;
     _dropIndicator.style.left = `${dropIndicatorX}px`;
   }
 
 
   /** Show indicator horizontally at top or bottom */
   private _showVertIndicator(target: SwdZoneElmentData, insertEdge: VerticalInsertEdge, _dropIndicator: HTMLElement) {
-    const offsetMap = parseOffsetString(target.elementRef.dataset.swdOffset ?? "");
-    const offset: Offset = {x: 10, y: 10};
-    _dropIndicator.style.width = `${target.width-offset.x}px`;
+    const offsetMap: Required<OffsetMap> = this._getSwdOffset(target.elementRef);
+    _dropIndicator.style.width = `${target.width-(offsetMap.left+offsetMap.right)}px`;
     _dropIndicator.style.height = `0px`;
 
     const dropIndicatorY = (insertEdge == 'vt') 
-      ? (target.y - (offsetMap["top"] ?? offset.y))  // placing at top side
-      : (target.y + target.height + (offsetMap["bottom"] ?? offset.y));  // placing at bottom side
+      ? (target.y - offsetMap.top)  // placing at top side
+      : (target.y + target.height + offsetMap.bottom);  // placing at bottom side
 
     _dropIndicator.style.top = `${dropIndicatorY}px`;
-    _dropIndicator.style.left = `${target.x+offset.x/2}px`;
+    _dropIndicator.style.left = `${target.x+offsetMap.left}px`;
   }
 
 
@@ -353,9 +352,29 @@ class DropIndicatorUtility {
       return false;
     }
   
-  return true;
-}
+    return true;
+  }
 
+  /** Parses the element's data-swd-offset attribute and returns a complete offset map, 
+      using default values for any sides not specified.  */
+  private _getSwdOffset(
+    element: HTMLElement, 
+    defaultOffset: Required<OffsetMap> = {
+      left: 10, 
+      right: 10, 
+      top: 10, 
+      bottom: 10 
+    }
+  ): Required<OffsetMap> {
+    const offsetMap: OffsetMap = parseOffsetString(element.dataset.swdOffset ?? "");
+    const offset: Required<OffsetMap> = {
+      left: offsetMap.left ?? defaultOffset.left, 
+      right: offsetMap.right ?? defaultOffset.right, 
+      top: offsetMap.top ?? defaultOffset.top, 
+      bottom: offsetMap.bottom ?? defaultOffset.bottom,
+    };
+    return offset;
+  }
  
   /** Find all scroll containers with data-swd-space attribute  */
   private _firstSwdScrollContainers(element: Element): HTMLElement|null {

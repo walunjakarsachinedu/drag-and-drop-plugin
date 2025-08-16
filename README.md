@@ -6,6 +6,7 @@ A flexible drag-and-drop plugin using declarative HTML attributes. Supports both
 
 - `data-swd-zones` (required): Space-separated zones this element accepts drops from.
 - `data-swd-offset`: Format `<side>:<offset in px>`, e.g., `top:10,left:10`. Default: `top:10,bottom:10,right:10,left:10`.
+  - Applies only in Position mode (not Area mode) and defines the offset from each side when placing an element.
 - `data-swd-mode`: `area` or `position`. Default: `position`.
 - `data-swd-area` (Area mode): `left`, `right`, `top`, `bottom`, `cover`. Default: `cover`.
 - `data-swd-position` (Position mode): `horizontal` or `vertical`. Default: `horizontal`.
