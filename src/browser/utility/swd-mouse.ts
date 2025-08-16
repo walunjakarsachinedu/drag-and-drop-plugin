@@ -166,9 +166,9 @@ class SwdMouse {
     return (touchEvent: TouchEvent) => {
       const touch = this._getTouchEvent(touchEvent.changedTouches);
       if(touch) {
-        SwdMouse.touchData!.target = document.elementFromPoint(touch.pageX, touch.pageY) as HTMLElement;
-        SwdMouse.touchData!.clientX = touch.pageX;
-        SwdMouse.touchData!.clientY = touch.pageY;
+        SwdMouse.touchData!.target = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement;
+        SwdMouse.touchData!.clientX = touch.clientX;
+        SwdMouse.touchData!.clientY = touch.clientY;
         // async with original object
         normalizedListener(touchEvent);
       }
