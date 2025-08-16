@@ -110,10 +110,19 @@ class Scrollable {
     const distance = this.autoScrollActivationDistance;
     const scrollData: ScrollData[] = [];
 
-    const leftEdge = x;
-    const rightEdge = x + width;
-    const topEdge = y;
-    const bottomEdge = y + height;
+    let leftEdge = x;
+    let rightEdge = x + width;
+    let topEdge = y;
+    let bottomEdge = y + height;
+
+    // Handling special case of HTML tag: HTML's getBoundingClientRect includes scroll offset, 
+    // so we use viewport coordinates to detect edges correctly for full-page scrolling
+    if(elementRef.tagName == "HTML") {
+      leftEdge = 0;
+      topEdge = 0;
+      rightEdge = window.innerWidth;
+      bottomEdge = window.innerHeight;
+    }
 
     if(elementRef.scrollWidth > elementRef.clientWidth) {
       const dl = mouseX - leftEdge;
