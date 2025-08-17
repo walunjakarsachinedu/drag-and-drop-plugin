@@ -1,85 +1,81 @@
+import { draggableCopy } from './browser/components/draggable-copy';
+import { dropIndicator } from './browser/components/drop-indicator';
+import { scrollable } from './browser/utility/scrollable';
+import { SwdMouse } from './browser/utility/swd-mouse';
+import { draggableZone } from './browser/zones/draggable-zone';
+import { droppableSpace } from './browser/zones/droppable-space';
+import { droppableZone } from './browser/zones/droppable-zone';
 import './styles.css';
 import { isInDropZoneOrSpace, resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
-import { SwdMouse } from './browser/utility/swd-mouse';
-import { DraggableZone } from './browser/zones/draggable-zone';
-import { DroppableZone } from './browser/zones/droppable-zone';
-import { DraggableCopy } from './browser/components/draggable-copy';
-import { DropIndicator } from './browser/components/drop-indicator';
-import { DroppableSpace } from './browser/zones/droppable-space';
-import { Scrollable } from './browser/utility/scrollable';
 
 
 class DragNDropPlugin {
-  private draggableZone = new DraggableZone();
-  private droppableZone = new DroppableZone();
-  private droppableSpace = new DroppableSpace();
-
-  private draggableCopy = new DraggableCopy();
-  private dropIndicator = new DropIndicator(this.draggableCopy);
-
-  private scrollable = new Scrollable();
 
   enablePlugin() {
     // clear previous setup, if any
     this.disablePlugin();
 
-    this.draggableZone.listenToDragZones();
+    draggableZone.listenToDragZones();
 
-    this.droppableSpace.onHovering((event) => {
-      if(this.scrollable.isScrolling()) {
-        this.dropIndicator.hideDropIndicator();
+    droppableSpace.onHovering((event) => {
+      if(scrollable.isScrolling()) {
+        dropIndicator.hideDropIndicator();
         return;
       }
-      this.dropIndicator.showDropIndicator(event);
+      dropIndicator.showDropIndicator(event);
     });
 
-    this.droppableZone.onHovering((event) => {
-      if(this.scrollable.isScrolling()) {
-        this.dropIndicator.hideDropIndicator();
+    droppableZone.onHovering((event) => {
+      if(scrollable.isScrolling()) {
+        dropIndicator.hideDropIndicator();
         return;
       }
-      this.dropIndicator.showDropIndicator(event);
+      dropIndicator.showDropIndicator(event);
     });
 
 
-    this.draggableZone.onDragStart((event) => {
+    draggableZone.onDragStart((event) => {
       setGlobalCursorStyleToMove();
-      this.draggableCopy.addElemCopyToDom(event.target.elementRef);
-      this.droppableZone.listenToDropZones(SwdMouse.extractSwdTargets(event));
-      this.droppableSpace.listenToDropZones(SwdMouse.extractSwdTargets(event));
-      this.scrollable.enableAutoScroll();
+      draggableCopy.addElemCopyToDom(event.target.elementRef);
+      droppableZone.listenToDropZones(SwdMouse.extractSwdTargets(event));
+      droppableSpace.listenToDropZones(SwdMouse.extractSwdTargets(event));
+      scrollable.enableAutoScroll();
     });
 
-    this.draggableZone.onDragMove((event) => {
-      this.draggableCopy.makeElmFollowMouse(event);
+    draggableZone.onDragMove((event) => {
+      draggableCopy.makeElmFollowMouse(event);
       if(!isInDropZoneOrSpace(event)) {
-        this.dropIndicator.hideDropIndicator();
+        dropIndicator.hideDropIndicator();
       }
     });
 
-    this.draggableZone.onDragEnd(() => {
+    draggableZone.onDragEnd(() => {
       resetGlobalCursorStyle();
-      this.dropIndicator.emitDropEvent();
-      this.dropIndicator.hideDropIndicator();
-      this.draggableCopy.removeCopyFromDom();
-      this.droppableZone.cleanListener();
-      this.droppableSpace.cleanListener();
-      this.scrollable.disableAutoScroll();
+      dropIndicator.emitDropEvent();
+      dropIndicator.hideDropIndicator();
+      draggableCopy.removeCopyFromDom();
+      droppableZone.cleanListener();
+      droppableSpace.cleanListener();
+      scrollable.disableAutoScroll();
     });
 
   }
 
   disablePlugin() {
-    this.draggableZone.clean();
-    this.droppableZone.clean();
-    this.droppableSpace.clean();
+    draggableZone.clean();
+    droppableZone.clean();
+    droppableSpace.clean();
     
-    this.draggableCopy.removeCopyFromDom();
-    this.dropIndicator.hideDropIndicator();
-    this.scrollable.disableAutoScroll();
+    draggableCopy.removeCopyFromDom();
+    dropIndicator.hideDropIndicator();
+    scrollable.disableAutoScroll();
   }
 }
 
-export { DragNDropPlugin };
+
+/** Singleton instance to enable/disable the plugin; plugin is disabled by default. */
+const dragNDropPlugin = new DragNDropPlugin();
+
+export { dragNDropPlugin };
 
 

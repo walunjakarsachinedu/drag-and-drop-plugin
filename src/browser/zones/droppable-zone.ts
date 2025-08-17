@@ -79,4 +79,8 @@ class DroppableZone {
   }
 }
 
-export {DroppableZone};
+
+// represent singleton instance
+const droppableZone = new DroppableZone();
+
+export { droppableZone };

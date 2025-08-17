@@ -1,8 +1,6 @@
-import { DraggableWithGetter, DragNDropPlugin, DropEventDetail } from "..";
-import { isDraggableWithGetter } from "..";
+import { DraggableWithGetter, dragNDropPlugin, DropEventDetail, isDraggableWithGetter } from "..";
 
 
-const dragNDropPlugin = new DragNDropPlugin();
 dragNDropPlugin.enablePlugin();
 
 

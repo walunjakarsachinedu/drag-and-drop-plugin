@@ -1,5 +1,6 @@
 import { DragElementGetter, DropEvent, DropEventDetail, DropTarget } from "../../types/types";
 import { dropUtility } from "../utility/drop-indicator-utility";
+import { draggableCopy } from "./draggable-copy";
 
 class DropIndicator {
   private _dropIndicator: HTMLElement = document.createElement("div");
@@ -58,6 +59,8 @@ class DropIndicator {
   }
 }
 
+// represent singleton instance
+const dropIndicator = new DropIndicator(draggableCopy);
 
-export {DropIndicator};
+export { dropIndicator };
 

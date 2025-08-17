@@ -230,4 +230,7 @@ class Scrollable {
   }
 }
 
-export { Scrollable, ScrollData as ScrollEvent };
+// represent singleton instance
+const scrollable = new Scrollable();
+
+export { scrollable };

@@ -51,4 +51,7 @@ class DraggableCopy implements DragElementGetter {
   }
 }
 
-export { DraggableCopy };
+// represent singleton instance
+const draggableCopy = new DraggableCopy();
+
+export { draggableCopy };

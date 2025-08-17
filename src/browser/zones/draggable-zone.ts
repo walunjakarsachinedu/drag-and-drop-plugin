@@ -144,4 +144,7 @@ class DraggableZone {
   }
 }
 
-export { DraggableZone };
+// represent singleton instance
+const draggableZone = new DraggableZone();
+
+export { draggableZone };

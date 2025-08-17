@@ -1,4 +1,4 @@
-import { DropTarget, MouseData, DropEvent, SwdEventWithTarget } from "../../types/types";
+import { DropEvent, DropTarget, MouseData, SwdEventWithTarget } from "../../types/types";
 import { EventEmitter, EventHandler } from "../../util/event-emitter";
 import { dropUtility } from "../utility/drop-indicator-utility";
 import { SwdMouse, SwdSubscription } from "../utility/swd-mouse";
@@ -91,4 +91,7 @@ class DroppableSpace {
   }
 }
 
-export {DroppableSpace};
+// represent singleton instance
+const droppableSpace = new DroppableSpace();
+
+export { droppableSpace };
