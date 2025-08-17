@@ -18,6 +18,10 @@ class DroppableZone {
   */
   listenToDropZones(dropZone: string|undefined) {
     if(!dropZone) return;
+
+    // cleaning previous listener
+    this.cleanListener();
+
     this.swdMouseSubscription = SwdMouse.addEventListenerWithTarget('mousemove', this._hoveringEventEmitter.bind(this));
     this.swdTargets = dropZone.split(' ');
   }
@@ -55,12 +59,19 @@ class DroppableZone {
     this.e_hovering.emit(dropUtility.toDropEvent(event, dropTarget));
   }
 
+  /** Just remove mouse listeners. */
   cleanListener() {
     if(this.swdMouseSubscription) {
       SwdMouse.clearEventListener("mousemove", this.swdMouseSubscription);
       this.swdMouseSubscription = null;
     }
     this.swdTargets = null;
+  }
+
+  /** Clean everything, including mouse listener + custom event listeners */
+  clean() {
+    this.cleanListener();
+    this.e_hovering.clear();
   }
 
   onHovering(handler: EventHandler<DropEvent>) {

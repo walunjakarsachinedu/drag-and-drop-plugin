@@ -1,5 +1,5 @@
-import './index.css';
-import { isDraggableWithGetter, isInDropZoneOrSpace, resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
+import './styles.css';
+import { isInDropZoneOrSpace, resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
 import { SwdMouse } from './browser/utility/swd-mouse';
 import { DraggableZone } from './browser/zones/draggable-zone';
 import { DroppableZone } from './browser/zones/droppable-zone';
@@ -7,79 +7,79 @@ import { DraggableCopy } from './browser/components/draggable-copy';
 import { DropIndicator } from './browser/components/drop-indicator';
 import { DroppableSpace } from './browser/zones/droppable-space';
 import { Scrollable } from './browser/utility/scrollable';
-import { DraggableWithGetter, DropEventDetail } from './types/types';
 
 
-const draggableZone = new DraggableZone();
-const droppableZone = new DroppableZone();
-const droppableSpace = new DroppableSpace();
+class DragNDropPlugin {
+  private draggableZone = new DraggableZone();
+  private droppableZone = new DroppableZone();
+  private droppableSpace = new DroppableSpace();
 
-const draggableCopy = new DraggableCopy();
-const dropIndicator = new DropIndicator(draggableCopy);
+  private draggableCopy = new DraggableCopy();
+  private dropIndicator = new DropIndicator(this.draggableCopy);
 
-const scrollable = new Scrollable();
+  private scrollable = new Scrollable();
 
-droppableSpace.onHovering((event) => {
-  if(scrollable.isScrolling()) {
-    dropIndicator.hideDropIndicator();
-    return;
+  enablePlugin() {
+    // clear previous setup, if any
+    this.disablePlugin();
+
+    this.draggableZone.listenToDragZones();
+
+    this.droppableSpace.onHovering((event) => {
+      if(this.scrollable.isScrolling()) {
+        this.dropIndicator.hideDropIndicator();
+        return;
+      }
+      this.dropIndicator.showDropIndicator(event);
+    });
+
+    this.droppableZone.onHovering((event) => {
+      if(this.scrollable.isScrolling()) {
+        this.dropIndicator.hideDropIndicator();
+        return;
+      }
+      this.dropIndicator.showDropIndicator(event);
+    });
+
+
+    this.draggableZone.onDragStart((event) => {
+      setGlobalCursorStyleToMove();
+      this.draggableCopy.addElemCopyToDom(event.target.elementRef);
+      this.droppableZone.listenToDropZones(SwdMouse.extractSwdTargets(event));
+      this.droppableSpace.listenToDropZones(SwdMouse.extractSwdTargets(event));
+      this.scrollable.enableAutoScroll();
+    });
+
+    this.draggableZone.onDragMove((event) => {
+      this.draggableCopy.makeElmFollowMouse(event);
+      if(!isInDropZoneOrSpace(event)) {
+        this.dropIndicator.hideDropIndicator();
+      }
+    });
+
+    this.draggableZone.onDragEnd(() => {
+      resetGlobalCursorStyle();
+      this.dropIndicator.emitDropEvent();
+      this.dropIndicator.hideDropIndicator();
+      this.draggableCopy.removeCopyFromDom();
+      this.droppableZone.cleanListener();
+      this.droppableSpace.cleanListener();
+      this.scrollable.disableAutoScroll();
+    });
+
   }
-  dropIndicator.showDropIndicator(event);
-});
 
-droppableZone.onHovering((event) => {
-  if(scrollable.isScrolling()) {
-    dropIndicator.hideDropIndicator();
-    return;
+  disablePlugin() {
+    this.draggableZone.clean();
+    this.droppableZone.clean();
+    this.droppableSpace.clean();
+    
+    this.draggableCopy.removeCopyFromDom();
+    this.dropIndicator.hideDropIndicator();
+    this.scrollable.disableAutoScroll();
   }
-  dropIndicator.showDropIndicator(event);
-});
+}
+
+export { DragNDropPlugin };
 
 
-draggableZone.onDragStart((event) => {
-  setGlobalCursorStyleToMove();
-  draggableCopy.addElemCopyToDom(event.target.elementRef);
-  droppableZone.listenToDropZones(SwdMouse.extractSwdTargets(event));
-  droppableSpace.listenToDropZones(SwdMouse.extractSwdTargets(event));
-  scrollable.enableAutoScroll();
-});
-
-draggableZone.onDragMove((event) => {
-  draggableCopy.makeElmFollowMouse(event);
-  if(!isInDropZoneOrSpace(event)) {
-    dropIndicator.hideDropIndicator();
-  }
-});
-
-draggableZone.onDragEnd(() => {
-  resetGlobalCursorStyle();
-  dropIndicator.emitDropEvent();
-  dropIndicator.hideDropIndicator();
-  draggableCopy.removeCopyFromDom();
-  droppableZone.cleanListener();
-  droppableSpace.cleanListener();
-  scrollable.disableAutoScroll();
-});
-
-
-// TODO: remove during publishing
-// example client usage code 
-window.addEventListener("DOMContentLoaded", () => {
-  const el_1h = document.getElementById("1h") as DraggableWithGetter<{msg: string, type: string}>; 
-  el_1h.getDragData = () => ({msg: "hello from 1h", type: "complexObject"});
-  const el_5v = document.getElementById("5v");
-  el_5v?.addEventListener('swd-drop', (event: CustomEvent<DropEventDetail>) => {
-    const el = event.detail.target;
-    if(isDraggableWithGetter(el)) {
-      console.log("Element dropped on 5v element with data: ", el.getDragData(), "at location ", event.detail.dropPos);
-    }
-  })
-
-  const el_4h = document.getElementById("4h");
-  el_4h?.addEventListener('swd-drop', (event: CustomEvent<DropEventDetail>) => {
-    const el = event.detail.target;
-    if(isDraggableWithGetter(el)) {
-      console.log("Element dropped on 4h element with data: ", el.getDragData(), "at location ", event.detail.dropPos);
-    }
-  })
-})

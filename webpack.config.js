@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   mode: "development",
   entry: {
-    plugin: path.resolve(__dirname, "src/drag-n-drop-plugin.ts"),
+    plugin: path.resolve(__dirname, "src/example/script.ts"),
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -14,7 +14,7 @@ module.exports = {
   devtool: "cheap-module-source-map",
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html', // Path to your HTML template
+      template: './src/example/index.html', // Path to your HTML template
     }),
   ],
   module: {

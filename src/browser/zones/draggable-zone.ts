@@ -1,6 +1,6 @@
 import { SwdEvent, SwdEventWithTarget } from "../../types/types";
 import { EventEmitter, EventHandler } from "../../util/event-emitter";
-import { SwdMouse } from "../utility/swd-mouse";
+import { SwdMouse, SwdSubscription } from "../utility/swd-mouse";
 
 let isDragging = false;
 let preventScrolling = false;
@@ -28,11 +28,20 @@ class DraggableZone {
 
   private delayTimeout: NodeJS.Timeout|null = null;
 
+  private mouseDownSubs: SwdSubscription|null = null;
+  private mouseMoveSubs: SwdSubscription|null = null;
+  private mouseUpSubs: SwdSubscription|null = null;
+
   constructor(
     /** set delay for touch based device. */
     private readonly dragDelayInMillis: number = 200
-  ) {
-    SwdMouse.addEventListenerWithTarget('mousedown', (event: SwdEventWithTarget) => {
+  ) { }
+
+  listenToDragZones() {
+    // cleaning previous listener
+    this.cleanListener();
+
+    this.mouseDownSubs = SwdMouse.addEventListenerWithTarget('mousedown', (event: SwdEventWithTarget) => {
       if(this._isDragPoint(event)) {
         const draggable = this._findDraggableAncestor(event);
         if(!draggable) return;
@@ -55,7 +64,7 @@ class DraggableZone {
       }
     });
 
-    SwdMouse.addEventListener('mousemove', (event: SwdEvent) => {
+    this.mouseMoveSubs = SwdMouse.addEventListener('mousemove', (event: SwdEvent) => {
       this._cancelDrag();
       if(!isDragging) return;
       preventScrolling = true;
@@ -63,7 +72,7 @@ class DraggableZone {
       this.e_dragMove.emit(event);
     });
 
-    SwdMouse.addEventListener('mouseup', (event: SwdEvent) => {
+    this.mouseUpSubs = SwdMouse.addEventListener('mouseup', (event: SwdEvent) => {
       this._cancelDrag();
       if(!isDragging) return;
 
@@ -71,6 +80,30 @@ class DraggableZone {
       isDragging = false;
       preventScrolling = false;
     });
+  }
+
+  /** Just remove mouse listeners. */
+  cleanListener() {
+    if(this.mouseDownSubs) {
+      SwdMouse.clearEventListener("mousedown", this.mouseDownSubs);
+      this.mouseDownSubs = null;
+    }
+    if(this.mouseMoveSubs) {
+      SwdMouse.clearEventListener("mousemove", this.mouseMoveSubs);
+      this.mouseMoveSubs = null;
+    }
+    if(this.mouseUpSubs) {
+      SwdMouse.clearEventListener("mouseup", this.mouseUpSubs);
+      this.mouseUpSubs = null;
+    }
+  }
+
+  /** Clean everything, including mouse listener + custom event listeners */
+  clean() {
+    this.cleanListener();
+    this.e_dragStart.clear();
+    this.e_dragMove.clear();
+    this.e_dragEnd.clear();
   }
 
   onDragStart(handler: EventHandler<SwdEventWithTarget>) {
