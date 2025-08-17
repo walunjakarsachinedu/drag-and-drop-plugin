@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist",
+    "module": "NodeNext",
+    "target": "ES2017",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "nodenext"
+  },
+  "include": ["src/index.ts"],
+  "exclude": ["node_modules"]
+}

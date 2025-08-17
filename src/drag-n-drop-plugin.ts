@@ -11,6 +11,11 @@ import { isInDropZoneOrSpace, resetGlobalCursorStyle, setGlobalCursorStyleToMove
 
 class DragNDropPlugin {
 
+  /**
+   * Enables the drag and drop plugin.
+   * Sets up all drag and drop zones, event listeners, and utilities.
+   * Should be called once to start using the library's drag and drop features.
+   */
   enablePlugin() {
     // clear previous setup, if any
     this.disablePlugin();
@@ -61,6 +66,11 @@ class DragNDropPlugin {
 
   }
 
+  /**
+   * Disables the drag and drop plugin.
+   * Cleans up all event listeners, DOM elements, and resources used by the plugin.
+   * After calling this, drag and drop features of this library will be inactive.
+   */
   disablePlugin() {
     draggableZone.clean();
     droppableZone.clean();
@@ -73,7 +83,11 @@ class DragNDropPlugin {
 }
 
 
-/** Singleton instance to enable/disable the plugin; plugin is disabled by default. */
+/**
+ * Singleton instance of the DragNDropPlugin.
+ * Users should import this and call `enablePlugin()` or `disablePlugin()` as needed.
+ * Plugin is disabled by default.
+ */
 const dragNDropPlugin = new DragNDropPlugin();
 
 export { dragNDropPlugin };

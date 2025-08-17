@@ -2,11 +2,23 @@
   "name": "drag-drop-plugin",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
+    "serve": " webpack serve --config webpack.dev.js",
+    "build:types": "tsup && rm -f dist/*.js dist/*.css",
     "build": "webpack",
-    "serve": "webpack serve"
+    "build:prod": "rm -rf dist && npm run build:types && webpack --config webpack.prod.js"
   },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.umd.js",
+  "types": "dist/index.d.ts",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -19,6 +31,7 @@
     "raw-loader": "^4.0.2",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
+    "tsup": "^8.5.0",
     "typescript": "^5.5.3",
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4",

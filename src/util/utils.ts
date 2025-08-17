@@ -105,6 +105,7 @@ function isInDropZoneOrSpace(event: SwdEvent) {
   return false;
 }
 
+/** Checks if an element has a getDragData method. */
 function isDraggableWithGetter(element: HTMLElement): element is DraggableWithGetter<unknown> {
   return typeof (element as any).getDragData === "function";
 }

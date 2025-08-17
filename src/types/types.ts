@@ -46,6 +46,7 @@ type TargetAndMouseData = {
 
 type DropTarget = {target: SwdZoneElmentData, area: Area};
 
+/** Detail for a drop event (e.g., `CustomEvent<DropEventDetail>`), including target element and drop position. */
 type DropEventDetail = {
   target: HTMLElement;
   dropPos: Area;
@@ -74,6 +75,10 @@ type DropEvent = SwdEvent & {
   placement?: Area;
 };
 
+/**
+ * An HTML element that provides a getDragData method.
+ * The method returns a value of type T.
+ */
 interface DraggableWithGetter<T> extends HTMLElement {
   getDragData: () => T;
 }
