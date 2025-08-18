@@ -8,154 +8,159 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 </head>
-<body>
-  <br>
-  <div style="display: flex; justify-content: center;">
+<body class="flex-column">
+  <div class="flex-row my-40">
+    <button id="example-btn" style="cursor: pointer;">show complex example</button>
     <button id="plugin-btn" style="cursor: pointer;">disable plugin</button>
   </div>
-  <br>
-  <div  data-swd-space style="height: 500px; overflow-y: auto; border: 1px solid #ccc;">
-    <div class="center"> 
-      <div id="1h" class="box" data-swd-targets="box1 box2 box3 common" data-swd-zones="box1">1 (h)</div>
-      <div class="box" data-swd-targets="box1 box2 box3 common" data-swd-zones="box1" data-swd-mode="area"> 
-        <div class="custom-box"> 
-          <div style="text-align: center;">
-            <!-- nested box -->
-            <div>2 (a)</div><sub>nested</sub> 
-          </div> 
+
+  <div id="simpleExample" class="flex-grow-1">
+    <div class="center-content">
+      <div data-swd-space class="border">
+        <!-- can be dropped on both "Drop Location 1" & "Drop Location 2" -->
+
+        <div id="drag1" class="box" data-swd-targets="zone1 zone2" data-swd-target-drag-point="handle">
+          <div>drag1</div>
+          <div class="box-handle" data-swd-drag-point="handle">Drag Me</div>
+        </div>
+
+        <!-- can be dropped only on "Drop Location 2" -->
+        <div id="drag2" class="box" data-swd-targets="zone2">
+          <div>drag2</div>
+          Drag me too
+        </div>
+
+        <!-- drop zones -->
+        <div id="drop1" class="box" data-swd-zones="zone1">
+          <div>drop1</div>
+          Drop Location 1
+        </div>
+        <div id="drop2" class="box" data-swd-zones="zone2">
+          <div>drop2</div>
+          Drop Location 2
         </div>
       </div>
-      <div class="box" data-swd-targets="box1 box2 box3 common" data-swd-zones="box1">3 (h)</div>
-    </div>
-    <div class="center">
-      <!-- box with drag point -->
-      <div id="4h" class="box" data-swd-targets="box2 box3 common" data-swd-zones="box2" data-swd-target-drag-point="hello">
-        <div class="custom-box">
-          <div style="text-align: center;">
-            <div>4 (h)</div>
-            <div data-swd-drag-point="hello" class="chips">
-              <div>drag point</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="5v" class="box" data-swd-targets="box2 box3 common" data-swd-zones="box2" data-swd-position="vertical">5 (v)</div>
-      <div class="box" data-swd-targets="box2 box3 common" data-swd-zones="box2" data-swd-position="vertical">6 (v)</div>
-    </div>
-    <!-- added for scrollable feature -->
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">7 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">8 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">9 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">10 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">11 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">12 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">13 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">14 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">15 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">16 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">17 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">18 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">19 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">20 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">21 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">22 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">23 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">24 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">25 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">26 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">27 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">28 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">29 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">30 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">31 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">32 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">33 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">34 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">35 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">36 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">37 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">38 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">39 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">40 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">41 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">42 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">43 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">44 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">45 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">46 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">47 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">48 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">49 (v)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">50 (a)</div>
-      <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">51 (h)</div>
-    </div>
-    <div class="center">
-      <div class="box-area" 
-        data-swd-targets="common" 
-        data-swd-zones="common" 
-        data-swd-mode="area" 
-        data-swd-area="cover top bottom left right"
-      >box area (a)</div>
+      <br>
+      <br>
+      <div class="txt-secondary">Note: drag1 can be drop on both drop1 & drop2, while drag2 can only be drop on drop2</div>
     </div>
   </div>
 
-  
-  <br><br><br>
-  <small><div style="text-align: center;">Use below scrollable list to test auto scroll <i>(during dragging)</i></div></small>
+  <div  id="complexExample">
+    <div data-swd-space class="border h-500">
+      <div class="center"> 
+        <div id="1h" class="box" data-swd-targets="box1 box2 box3 common" data-swd-zones="box1">drag1 (h)</div>
+        <div class="box" data-swd-targets="box1 box2 box3 common" data-swd-zones="box1" data-swd-mode="area"> 
+          <div class="custom-box"> 
+            <div style="text-align: center;">
+              <!-- nested box -->
+              <div>drag2 (a)</div><sub>nested</sub> 
+            </div> 
+          </div>
+        </div>
+        <div class="box" data-swd-targets="box1 box2 box3 common" data-swd-zones="box1">drag3 (h)</div>
+      </div>
+      <div class="center">
+        <!-- box with drag point -->
+        <div id="4h" class="box" data-swd-targets="box2 box3 common" data-swd-zones="box2" data-swd-target-drag-point="hello">
+            <div>drag4 (h)</div>
+            <div data-swd-drag-point="hello" class="box-handle">
+              <div>drag point</div>
+            </div>
+        </div>
+        <div id="5v" class="box" data-swd-targets="box2 box3 common" data-swd-zones="box2" data-swd-position="vertical">drag5 (v)</div>
+        <div class="box" data-swd-targets="box2 box3 common" data-swd-zones="box2" data-swd-position="vertical">drag6 (v)</div>
+      </div>
+      <!-- added for scrollable feature -->
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag7 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag8 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag9 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag10 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag11 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag12 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag13 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag14 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag15 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag16 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag17 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag18 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag19 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag20 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag21 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag22 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag23 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag24 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag25 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag26 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag27 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag28 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag29 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag30 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag31 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag32 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag33 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag34 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag35 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag36 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag37 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag38 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag39 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag40 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag41 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag42 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag43 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag44 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag45 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag46 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag47 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag48 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag49 (v)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-mode="area">drag50 (a)</div>
+        <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7">drag51 (h)</div>
+      </div>
+      <div class="center">
+        <div class="box-area" 
+          data-swd-targets="common" 
+          data-swd-zones="common" 
+          data-swd-mode="area" 
+          data-swd-area="cover top bottom left right"
+        >box area (a)</div>
+      </div>
+    </div>
+
+  <br><br><br> <small><div style="text-align: center;">Use below scrollable list to test auto scroll <i>(during dragging)</i></div></small>
   <div style="height: 500px; display: flex; flex-direction: row; flex-wrap: nowrap;">
     <div class="center-list"> </div>
     <div class="center-list"> </div> 
-    <style>
-      .box2 {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100px;
-        width: 100px;
-        background-color: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 10px;
-        margin: 10px 10px;
-      }
-      .center-list {
-        display: flex; 
-        flex-direction: column; 
-        overflow-y: scroll;
-        align-items: center;
-        width: 100%;
-        border: 1px solid #ccc;
-        margin: 20px;
-      }
-    </style>
 
     <script>
       const cols = document.querySelectorAll('.center-list');
@@ -174,5 +179,8 @@
 
 
   <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  </div>
+
+  
 </body>
 </html>

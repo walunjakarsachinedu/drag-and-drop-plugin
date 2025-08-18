@@ -1,7 +1,17 @@
 import { DraggableWithGetter, dragNDropPlugin, DropEventDetail, isDraggableWithGetter } from "..";
+import "./style.css";
 
 
 dragNDropPlugin.enablePlugin();
+
+const drop2 = document.getElementById("drop2");
+drop2?.addEventListener("swd-drop", (event: CustomEvent<DropEventDetail>) => {
+  const el = event.detail.target;
+  if (isDraggableWithGetter(el)) {
+    console.log("Element dropped on drop2 with data:", el.getDragData(), "at location", event.detail.dropPos);
+  }
+});
+
 
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -38,4 +48,27 @@ pluginBtn?.addEventListener("click", () => {
     pluginBtn.textContent = "disable plugin";
   }
   pluginBtn.isPluginEnabled = !pluginBtn.isPluginEnabled;
+});
+
+
+
+const exampleBtn = document.getElementById("example-btn") as HTMLElement & {showComplexExample: boolean};
+exampleBtn.showComplexExample = false;
+const root = document.documentElement;
+root.style.setProperty('--show-simple-example', 'block');
+root.style.setProperty('--show-complex-example', 'none');
+
+
+exampleBtn?.addEventListener("click", () => {
+  if(exampleBtn.showComplexExample) {
+    exampleBtn.textContent = "show complex example";
+    root.style.setProperty('--show-simple-example', 'block');
+    root.style.setProperty('--show-complex-example', 'none');
+  }
+  else {
+    exampleBtn.textContent = "show simple example";
+    root.style.setProperty('--show-simple-example', 'none');
+    root.style.setProperty('--show-complex-example', 'block');
+  }
+  exampleBtn.showComplexExample = !exampleBtn.showComplexExample;
 });

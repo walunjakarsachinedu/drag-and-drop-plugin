@@ -88,6 +88,8 @@ dropTarget.dispatchEvent(event);
         Drop Location 2
       </div>
     </div>
+    <br><br>
+    <div class="txt">Note: drag1 can be drop on both drop1 & drop2, while drag2 can only be drop on drop2</div>
   </div>
   ```
 </details>
