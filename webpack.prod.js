@@ -3,7 +3,6 @@ const common = require("./webpack.common.js");
 const path = require("path");
 
 const formats = [
-  { name: "umd", type: "umd" },
   { name: "cjs", type: "commonjs2" },
   { name: "esm", type: "module" },
 ];
@@ -22,7 +21,6 @@ module.exports = formats.map(({ name, type }) =>
       filename: `index.${name}.js`,
       library: {
         type: type,
-        name: type === "umd" ? "DragNDropPlugin" : undefined,
       },
     },
     devtool: "source-map",

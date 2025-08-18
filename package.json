@@ -1,7 +1,7 @@
 {
-  "name": "drag-drop-plugin",
+  "name": "drag-and-drop-plugin",
   "version": "1.0.0",
-  "description": "",
+  "description": "A lightweight drag-and-drop plugin for web applications.",
   "scripts": {
     "serve": " webpack serve --config webpack.dev.js",
     "build:types": "tsup && rm -f dist/*.js dist/*.css",
@@ -15,12 +15,25 @@
       "require": "./dist/index.cjs.js"
     }
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
-  "browser": "dist/index.umd.js",
   "types": "dist/index.d.ts",
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "drag-and-drop",
+    "drag",
+    "drop",
+    "plugin",
+    "javascript",
+    "typescript",
+    "web",
+    "ui"
+  ],
+  "author": "Sachin Walunjakar",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.24.7",
