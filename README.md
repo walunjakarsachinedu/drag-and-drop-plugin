@@ -6,14 +6,14 @@ A flexible drag-and-drop plugin using declarative HTML attributes. Supports both
 ### Installation 
 If you use npm:
 ```bash
-npm i drag-drop-plugin
+npm i drag-and-drop-plugin
 ```
 
 ### Quick Start
 Enable the plugin and use HTML attributes:
 
 ```ts
-import { dragNDropPlugin } from 'drag-drop-plugin';
+import { dragNDropPlugin } from 'drag-and-drop-plugin';
 
 // Enable the drag-and-drop plugin globally
 dragNDropPlugin.enablePlugin(); 
@@ -99,7 +99,7 @@ dropTarget.dispatchEvent(event);
   
   ```typescript
   import './style.css'
-  import { dragNDropPlugin, isDraggableWithGetter, type DraggableWithGetter, type DropEventDetail } from 'drag-drop-plugin';
+  import { dragNDropPlugin, isDraggableWithGetter, type DraggableWithGetter, type DropEventDetail } from 'drag-and-drop-plugin';
 
 
   dragNDropPlugin.enablePlugin();

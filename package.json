@@ -6,7 +6,8 @@
     "serve": " webpack serve --config webpack.dev.js",
     "build:types": "tsup && rm -f dist/*.js dist/*.css",
     "build": "webpack",
-    "build:prod": "rm -rf dist && npm run build:types && webpack --config webpack.prod.js"
+    "build:prod": "rm -rf dist && npm run build:types && webpack --config webpack.prod.js",
+    "publish": "npm run build:prod && npm publish --access public"
   },
   "exports": {
     ".": {
