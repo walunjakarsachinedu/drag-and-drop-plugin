@@ -1,5 +1,3 @@
-const path = require("path");
-
 /**
  * @type {import('webpack').Configuration}
  */
@@ -8,33 +6,38 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.ts$/,
+        test: /\.ts?$/,
         use: [
+          // step 2: convert javascript to backward compatible
           {
-            loader: "babel-loader",
+            loader: 'babel-loader',
             options: {
-              presets: [
+              "presets": [
                 [
                   "@babel/preset-env",
                   {
-                    targets: {
-                      browsers: ["last 2 versions", "ie >= 11"],
-                    },
-                  },
-                ],
-              ],
+                    "targets": {
+                      "browsers": [
+                        "last 2 versions",
+                        "ie >= 11"
+                      ]
+                    }
+                  }
+                ]
+              ]
             },
           },
+          // step 1: convert typescript to javascript
           {
             loader: "ts-loader",
-          },
+          }
         ],
         exclude: /node_modules/,
-      },
-    ],
+      }
+    ]
   },
   resolve: {
     extensions: [".ts", ".js"],
