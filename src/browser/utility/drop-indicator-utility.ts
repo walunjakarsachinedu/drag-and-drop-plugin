@@ -138,7 +138,7 @@ class DropIndicatorUtility {
     // optimization to reduce call to elementFromPoint
     const cache: Record<number, Record<number, boolean>> = {};
 
-    const isParentOrInside = ({x, y}: Point, dropZoneElement: Element) => {
+    const isPointVisible = ({x, y}: Point, dropZoneElement: Element) => {
       if(cache[x]?.[y]) return cache[x][y];
       const isFeasible = this._isPointVisibleInSwdContainers(x, y, dropZoneElement);;
       cache[x] ??= {};
@@ -147,7 +147,7 @@ class DropIndicatorUtility {
     }
 
     const dropArea = areas.find(area => {
-      return this._getCornerPoints(target, area).every((point) => isParentOrInside(point, target.elementRef));
+      return this._getCornerPoints(target, area).every((point) => isPointVisible(point, target.elementRef));
     }) ?? null;
 
     return dropArea;
@@ -334,8 +334,14 @@ class DropIndicatorUtility {
 
 
   /** Check if a point is visible within data-swd-space containers only  */
-  private _isPointVisibleInSwdContainers(x: number, y: number, targetElement: Element) {
-    const isOutOfBound = x < 0 || x > window.innerWidth || y < 0 || y > window.innerHeight
+  private _isPointVisibleInSwdContainers(x: number, y: number, targetElement: Element): boolean {
+    const viewport = window.visualViewport;
+    if(!viewport) return false;
+
+    const visibleWidth = (viewport.offsetLeft+viewport.width-10);
+    const visibleHeight = (viewport.offsetTop+viewport.height-10);
+
+    const isOutOfBound = x < 0 || x > visibleWidth || y < 0 || y > visibleHeight;
     if(isOutOfBound) return false;
 
     // If no data-swd-space containers found, check point is in bound
