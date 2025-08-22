@@ -341,7 +341,7 @@ class DropIndicatorUtility {
     const visibleWidth = (viewport.offsetLeft+viewport.width-10);
     const visibleHeight = (viewport.offsetTop+viewport.height-10);
 
-    const isOutOfBound = x < 0 || x > visibleWidth || y < 0 || y > visibleHeight;
+    const isOutOfBound = x < viewport.offsetLeft || x > visibleWidth || y < viewport.offsetTop || y > visibleHeight;
     if(isOutOfBound) return false;
 
     // If no data-swd-space containers found, check point is in bound

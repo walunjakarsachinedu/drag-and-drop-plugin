@@ -42,17 +42,19 @@
       </div>
       <br>
       <br>
-      <div class="txt-secondary">Note: drag1 can be drop on both drop1 & drop2, while drag2 can only be drop on drop2</div>
+      <small class="text-center">note: drag1 can be drop on both drop1 & drop2, while drag2 can only be dropped on drop2</small>
     </div>
   </div>
 
   <div  id="complexExample">
+    <small class="text-center w-100 mb-20">note: dragged elements are configured to drop on their level or lower levels.</small>
     <div data-swd-space class="border h-500">
+      <div class="tag">layer 1</div>
       <div class="center"> 
         <div id="1h" class="box" data-swd-targets="box1 box2 box3 common" data-swd-zones="box1">drag1 (h)</div>
         <div class="box" data-swd-targets="box1 box2 box3 common" data-swd-zones="box1" data-swd-mode="area"> 
           <div class="custom-box"> 
-            <div style="text-align: center;">
+            <div class="text-center">
               <!-- nested box -->
               <div>drag2 (a)</div><sub>nested</sub> 
             </div> 
@@ -60,6 +62,7 @@
         </div>
         <div class="box" data-swd-targets="box1 box2 box3 common" data-swd-zones="box1">drag3 (h)</div>
       </div>
+      <div class="tag">layer 2</div>
       <div class="center">
         <!-- box with drag point -->
         <div id="4h" class="box" data-swd-targets="box2 box3 common" data-swd-zones="box2" data-swd-target-drag-point="hello">
@@ -71,6 +74,7 @@
         <div id="5v" class="box" data-swd-targets="box2 box3 common" data-swd-zones="box2" data-swd-position="vertical">drag5 (v)</div>
         <div class="box" data-swd-targets="box2 box3 common" data-swd-zones="box2" data-swd-position="vertical">drag6 (v)</div>
       </div>
+      <div class="tag">layer 3</div>
       <!-- added for scrollable feature -->
       <div class="center">
         <div class="box" data-swd-targets="box3 common" data-swd-zones="box3" data-swd-offset="bottom:7" data-swd-position="vertical">drag7 (v)</div>
@@ -155,9 +159,10 @@
           data-swd-area="cover top bottom left right"
         >box area (a)</div>
       </div>
+      <small class="text-center w-100 my-20">note: "box area (a)" configured to drop on itself only.</small>
     </div>
 
-  <br><br><br> <small><div style="text-align: center;">Use below scrollable list to test auto scroll <i>(during dragging)</i></div></small>
+  <br><br><br> <small><div class="text-center">use below scrollable list to test auto scroll <i>(during dragging)</i></div></small>
   <div style="height: 500px; display: flex; flex-direction: row; flex-wrap: nowrap;">
     <div class="center-list"> </div>
     <div class="center-list"> </div> 

@@ -138,3 +138,29 @@ body {
   height: 200px;
   width: 200px;
 }
+
+.tag {
+  font-size: small;
+  background: rgba(100, 100, 100, .3);
+  padding: 2px 8px;
+  margin-top: 15px;
+  border-radius: 4px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.w-100 {
+  width: 100%;
+  display: block;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.my-20 {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

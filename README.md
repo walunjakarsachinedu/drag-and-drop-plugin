@@ -1,7 +1,8 @@
 ## SWD Drag & Drop
 
-A flexible drag-and-drop plugin using declarative HTML attributes. Supports both position-based and area-based drop.
+A flexible drag-and-drop plugin using declarative HTML attributes. Supports both position-based and area-based drops.
 
+**See Live Demo**: https://drag-and-drop-plugin.vercel.app/
 
 ### Installation 
 If you use npm:
@@ -23,40 +24,57 @@ dragNDropPlugin.enablePlugin();
 
 #### Drag Element Attributes
 
-- `data-swd-targets` (required): List of zones this element can be dropped into.
-- `data-swd-target-drag-point`: Restrict drag to child with matching `data-swd-drag-point`.
-- `data-swd-drag-point`: Defines child element as a valid drag handle.
-  This should be define on child element of drag element
+- `data-swd-targets` (required): Space-separated list of zones this element can be dropped into.
+- `data-swd-target-drag-point`: Restricts dragging to a child with a matching `data-swd-drag-point`.
+- `data-swd-drag-point`: Marks a child element as a valid drag handle. Should be defined on a child element of the draggable.
 
 #### Container Attribute
-Represent container for drag and drop elements.
-- `data-swd-space`: Allows capturing mouse events in empty space surrounding drop zones.
+Represents a container for drag and drop elements.
+- `data-swd-space`: Captures mouse events in the empty space around drop zones.
 
 #### Drop Element Attributes
 
 - `data-swd-zones` (required): Space-separated zones this element accepts drops from.
 - `data-swd-offset`: Format `<side>:<offset in px>`, e.g., `top:10,left:10`. Default: `top:10,bottom:10,right:10,left:10`.
-  - Applies only in Position mode (not Area mode) and defines the offset from each side when placing an element.
+  - Applies only in Position mode (not Area mode) and defines offset from each side when placing an element.
 - `data-swd-mode`: `area` or `position`. Default: `position`.
+  - Defines how drops are handled: `area` replaces a region, while `position` inserts an element.
 - `data-swd-area` (Area mode): `left`, `right`, `top`, `bottom`, `cover`. Default: `cover`.
+  - Specifies which part of the drop zone accepts the drop (e.g., left side, top side, or full cover).
 - `data-swd-position` (Position mode): `horizontal` or `vertical`. Default: `horizontal`.
+  - Determines how elements are placed: horizontal (before/after) or vertical (above/below).
+
+##### Note: 
+- You can only drop an element if the target region is visible.
+- If a drop is not possible/allowed on the hovered element, the drop indicator will appear on the nearest valid region.
 
 
 #### Drop Event
 
-On a successful drop, a CustomEvent named swd-drop is dispatched. The event contains draggedElement as `target` and `dropPos`.<br>
-Possible values of `dropPos`: `"vt" | "vb" | "hl" | "hr" | "al" | "ar" | "at" | "ab" | "ac"`.
+On a successful drop, a CustomEvent named swd-drop is dispatched. <br>
+The event includes:
+- target: the dragged element
+- dropPos: the drop position. (Possible values: `"vt" | "vb" | "hl" | "hr" | "al" | "ar" | "at" | "ab" | "ac"`)
+  - `v` = vertical, `h` = horizontal, `l` = left, `r` = right, `t` = top, `b` = bottom, `a` = area, `c` = cover
 
+Example:
 ```ts
-const event = new CustomEvent<DropEventDetail>('swd-drop', {
-  detail: { target: draggedElement, dropPos },
-  bubbles: true,
-  cancelable: true
-});
-dropTarget.dispatchEvent(event);
-```
-> Note: For safe data transfer from a draggable to a drop target, add a getDragData function to the draggable element using the DraggableWithGetter type. On the drop target, use isDraggableWithGetter to check event.detail.target before casting it to DraggableWithGetter.
+import { dragNDropPlugin, isDraggableWithGetter, type DraggableWithGetter, type DropEventDetail } from 'drag-and-drop-plugin';
 
+dragNDropPlugin.enablePlugin(); 
+
+const drag = document.getElementById("drag") as DraggableWithGetter<{ msg: string; type: string }>;
+drag.getDragData = () => ({ msg: "hello from drag", type: "complexObject" });
+
+const dropZone = document.getElementById("dropZone");
+dropZone?.addEventListener("swd-drop", (event: CustomEvent<DropEventDetail>) => {
+  const el = event.detail.target;
+  if (isDraggableWithGetter(el)) { // ensures el has getDragData
+    console.log("Element dropped on dropZone with data:", el.getDragData(), "at location", event.detail.dropPos);
+  }
+});
+```
+> Tip: For safe data transfer, define a getDragData function on draggable elements using the DraggableWithGetter type. On drop targets, use isDraggableWithGetter to verify that event.detail.target has getDragData before using it.
 <br>
 
 #### Full Example
@@ -89,7 +107,7 @@ dropTarget.dispatchEvent(event);
       </div>
     </div>
     <br><br>
-    <div class="txt">Note: drag1 can be drop on both drop1 & drop2, while drag2 can only be drop on drop2</div>
+    <div class="txt">Note: drag1 can be dropped on both drop1 & drop2, while drag2 can only be dropped on drop2</div>
   </div>
   ```
 </details>
@@ -157,10 +175,3 @@ dropTarget.dispatchEvent(event);
   }
   ```
 </details>
-
-<br>
-
----
-#### See Live Demo:
-https://drag-and-drop-plugin.vercel.app/
-

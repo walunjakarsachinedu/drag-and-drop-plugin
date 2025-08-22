@@ -6,7 +6,15 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        oneOf: [
+          {
+            resourceQuery: /raw/, // `import './file.css?raw'`
+            use: ['to-string-loader', 'css-loader']
+          },
+          {
+            use: ['style-loader', 'css-loader']
+          }
+        ]
       },
       {
         test: /\.ts?$/,

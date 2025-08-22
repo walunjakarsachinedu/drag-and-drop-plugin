@@ -5,9 +5,11 @@ import { SwdMouse } from './browser/utility/swd-mouse';
 import { draggableZone } from './browser/zones/draggable-zone';
 import { droppableSpace } from './browser/zones/droppable-space';
 import { droppableZone } from './browser/zones/droppable-zone';
-import './styles.css';
+import cssString from './styles.css?raw';
+
 import { isInDropZoneOrSpace, resetGlobalCursorStyle, setGlobalCursorStyleToMove } from './util/utils';
 
+let styleElement: HTMLStyleElement | null = null;
 
 class DragNDropPlugin {
 
@@ -20,6 +22,7 @@ class DragNDropPlugin {
     // clear previous setup, if any
     this.disablePlugin();
 
+    this.enablePluginStyle();
     draggableZone.listenToDragZones();
 
     droppableSpace.onHovering((event) => {
@@ -72,6 +75,7 @@ class DragNDropPlugin {
    * After calling this, drag and drop features of this library will be inactive.
    */
   disablePlugin() {
+    this.disablePluginStyle();
     draggableZone.clean();
     droppableZone.clean();
     droppableSpace.clean();
@@ -79,6 +83,21 @@ class DragNDropPlugin {
     draggableCopy.removeCopyFromDom();
     dropIndicator.hideDropIndicator();
     scrollable.disableAutoScroll();
+  }
+  
+  enablePluginStyle() {
+    if (styleElement) return;
+
+    styleElement = document.createElement("style");
+    styleElement.id = "drag-and-drop-plugin-style"
+    styleElement.textContent = cssString;
+    document.head.appendChild(styleElement);
+  }
+
+  disablePluginStyle() {
+    if (!styleElement) return;
+    styleElement.remove();
+    styleElement = null;
   }
 }
 
