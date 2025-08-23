@@ -5,7 +5,6 @@ A flexible drag-and-drop plugin using declarative HTML attributes. Supports both
 **See Live Demo**: https://drag-and-drop-plugin.vercel.app/
 
 ### Installation 
-If you use npm:
 ```bash
 npm i drag-and-drop-plugin
 ```
